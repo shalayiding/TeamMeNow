@@ -1,0 +1,15 @@
+
+.App-link {
+  color: #61dafb;
+}
+
+.App-body img{
+  width: 500px;
+  height: 500px;
+  align-items: center;
+}
+
+/* .App-header{
+  position: fixed;
+  width: 100%; 
+} */
