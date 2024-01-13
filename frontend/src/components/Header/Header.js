@@ -48,7 +48,7 @@ function Header() {
           <span className="span-4">
             <img
               loading="lazy"
-              srcSet="..."
+              src = {others_icon}
               className="img-5"
             />
             <div className="div-7">Others</div>
@@ -56,7 +56,7 @@ function Header() {
           <span className="span-5">
             <img
               loading="lazy"
-              srcSet="..."
+              src = {discord_icon}
               className="img-6"
             />
             <div className="div-8">Link My Discord</div>
