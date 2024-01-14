@@ -1,9 +1,12 @@
 import React from "react";
 import "./Blog.css"; // Assuming you have a CSS file for styling
+import MatchCard from '../MatchCard/MatchCard';
 
 function Blog() {
   return (
+    
     <div className="blog-container">
+      <MatchCard />
       <h1 className="blog-title">My Blog Title</h1>
       <img
         src="https://techcrunch.com/wp-content/uploads/2021/05/Discord_IAP_KeyVisuals_Header_02.jpeg"

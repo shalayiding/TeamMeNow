@@ -2,9 +2,12 @@ import './App.css';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import Blog from './components/Blog/Blog'
+import {NextUIProvider} from "@nextui-org/react";
 
 function App() {
   return (
+    <NextUIProvider>
+     
     <div className="App">
       
       <header className="App-header">
@@ -18,8 +21,9 @@ function App() {
         <Footer />
       </footer>
 
-
     </div>
+     
+    </NextUIProvider>
   );
 }
 
