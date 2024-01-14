@@ -3,7 +3,7 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from datetime import datetime,timedelta
 import sys
-sys.path.append('D:\\mygithub\\TeamMeUp\\backend')
+sys.path.append('/Users/shalayidingaierken/Documents/Code/Mygithub/TeamMeUp/backend')
 import api_keys as keys
 
 class DB_Matchs:
@@ -30,7 +30,7 @@ class DB_Matchs:
                 query = {'host_name':host_name,
                         'host_id':host_id,
                         'game_name':game_name,
-                        'mode':game_mode,
+                        'game_mode':game_mode,
                         'max_player':max_player,
                         'current_player':current_player,
                         'description':description,
@@ -44,16 +44,17 @@ class DB_Matchs:
             print("Current game is not supported by us")
         else:
             self.collection = self.db[game_name]
-            query = {"current_player": {"$lt": "$max_player"}}
+            query = {'$expr': {'$lt': ['$current_player', '$max_player']}}
             if use_both_filters and game_mode:
                 query['game_name'] = game_name
-                query['mode'] = game_mode
+                query['game_mode'] = game_mode
             elif game_mode:
-                query['mode'] = game_mode
+                query['game_mode'] = game_mode
             elif game_name:
                 query['game_name'] = game_name
             try:
                 # Find and return the available matches
+                
                 available_matches = self.collection.find(query)
                 return list(available_matches)
             except Exception as e:
@@ -71,7 +72,6 @@ class DB_Matchs:
             "create_time": {"$gt": (datetime.now() - timedelta(hours=24)).strftime("%Y/%m/%d %H:%M:%S")}
             }
             matches = self.collection.find(query)
-            
             for m in matches:
                 if total_added < maxoutput:
                     list_of_matchs.append(m)
@@ -82,14 +82,12 @@ class DB_Matchs:
                 break
         return list_of_matchs
 
-db_match = DB_Matchs(keys.mongodb_link,'Matchs','League_of_Legends')
-# db_match.insert_match('Aiiii','testid1','League_of_Legends','rank',5,3,'looking for 2')
-# db_match.insert_match('Aiiii','testid1','League_of_Legends','rank',5,4,'looking for 1')
-# db_match.insert_match('Aiiii','testid1','League_of_Legends','rank',5,5,'looking for 0')
-# db_match.insert_match('Aiiii','testid1','League_of_Legends','rank',5,4,'looking for 1')
-# db_match.insert_match('Aiiii','testid1','League_of_Legends','rank',5,1,'looking for 4')
 
-print(db_match.list_all_available_match_with_condition('League_of_Legends'))
+
+
+# db_match = DB_Matchs(keys.mongodb_link,'Matchs','League_of_Legends')
+
+# print(db_match.list_all_available_match_with_condition('League_of_Legends',game_mode = 'normal'))
             
 
 
