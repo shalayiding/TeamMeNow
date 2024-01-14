@@ -1,8 +1,7 @@
-import logo from './logo.svg';
 import './App.css';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
-
+import Blog from './components/Blog/Blog'
 
 function App() {
   return (
@@ -11,20 +10,10 @@ function App() {
       <header className="App-header">
       <Header />
       </header>
-      
-      <div className = 'App-body'>
-        <img src={logo} className="App-logo" alt="logo" />
-        <img src={logo} className="App-logo" alt="logo" />
-        <img src={logo} className="App-logo" alt="logo" />
-        <img src={logo} className="App-logo" alt="logo" />
-
-        <img src={logo} className="App-logo" alt="logo" />
-        <img src={logo} className="App-logo" alt="logo" />
-        <img src={logo} className="App-logo" alt="logo" />
+      <div className='App-Blog'>
+      <Blog />
       </div>
       
-      
-
       <footer className="App-footer">
         <Footer />
       </footer>

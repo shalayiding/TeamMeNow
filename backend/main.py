@@ -1,13 +1,26 @@
 from flask import request,Flask,jsonify
 from discord_oauth2 import DCoauth
 import requests
+import random
+from flask_cors import CORS  # Import CORS
 app = Flask(__name__)
+CORS(app) 
+
 
 @app.route("/")
 def welcome_page():
     return "<p>Hello, World!</p>"
 
 
+@app.route('/public/game/LeagueofLegends')
+def lol_game():
+    # Generating some random data
+    data = {
+        'number': random.randint(1, 100),
+        'message': random.choice(['Hello', 'Hi', 'Greetings', 'Welcome']),
+        'status': random.choice(['success', 'failure'])
+    }
+    return jsonify(data)
 
 
 @app.route('/link/discord',methods=['GET'])
