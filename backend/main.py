@@ -3,7 +3,13 @@ from discord_oauth2 import DCoauth
 import requests
 import random
 from flask_cors import CORS  # Import CORS
+from Database.match import DB_Matchs
+import api_keys as keys
+import bson.json_util as json_util
+
 app = Flask(__name__)
+db_match = DB_Matchs(keys.mongodb_link,"Matchs","League_of_Legends")
+
 CORS(app) 
 
 
@@ -12,15 +18,13 @@ def welcome_page():
     return "<p>Hello, World!</p>"
 
 
-@app.route('/public/game/LeagueofLegends')
-def lol_game():
-    # Generating some random data
-    data = {
-        'number': random.randint(1, 100),
-        'message': random.choice(['Hello', 'Hi', 'Greetings', 'Welcome']),
-        'status': random.choice(['success', 'failure'])
-    }
-    return jsonify(data)
+@app.route('/v1/game/<gamename>')
+def lol_game(gamename):
+    found_matches = db_match.list_all_available_match_with_condition(str(gamename))
+    if found_matches is None:
+        return jsonify({"matches": []}), 400, {'ContentType': 'application/json'}
+    matches_json = json_util.dumps(found_matches)
+    return matches_json, 200, {'ContentType': 'application/json'}
 
 
 @app.route('/link/discord',methods=['GET'])

@@ -3,7 +3,7 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from datetime import datetime,timedelta
 import sys
-sys.path.append('/Users/shalayidingaierken/Documents/Code/Mygithub/TeamMeUp/backend')
+sys.path.append('D:\\mygithub\\TeamMeUp\\backend')
 import api_keys as keys
 
 class DB_Matchs:
@@ -30,7 +30,7 @@ class DB_Matchs:
                 query = {'host_name':host_name,
                         'host_id':host_id,
                         'game_name':game_name,
-                        'game_mode':game_mode,
+                        'mode':game_mode,
                         'max_player':max_player,
                         'current_player':current_player,
                         'description':description,
@@ -42,24 +42,24 @@ class DB_Matchs:
     def list_all_available_match_with_condition(self,game_name, game_mode=None, use_both_filters=False):       
         if game_name not in self.db.list_collection_names():
             print("Current game is not supported by us")
+            return None
         else:
             self.collection = self.db[game_name]
-            query = {'$expr': {'$lt': ['$current_player', '$max_player']}}
+            query = {"$expr": {"$lt": ["$current_player", "$max_player"]}}
             if use_both_filters and game_mode:
                 query['game_name'] = game_name
-                query['game_mode'] = game_mode
+                query['mode'] = game_mode
             elif game_mode:
-                query['game_mode'] = game_mode
+                query['mode'] = game_mode
             elif game_name:
                 query['game_name'] = game_name
             try:
                 # Find and return the available matches
-                
                 available_matches = self.collection.find(query)
-                return list(available_matches)
+                return available_matches
             except Exception as e:
                 print(f"An error occurred while fetching available matches: {e}")
-                return []
+                return None
        
             
     def list_all_available_match(self,maxoutput):
@@ -72,6 +72,7 @@ class DB_Matchs:
             "create_time": {"$gt": (datetime.now() - timedelta(hours=24)).strftime("%Y/%m/%d %H:%M:%S")}
             }
             matches = self.collection.find(query)
+            
             for m in matches:
                 if total_added < maxoutput:
                     list_of_matchs.append(m)
@@ -82,13 +83,6 @@ class DB_Matchs:
                 break
         return list_of_matchs
 
-
-
-
-# db_match = DB_Matchs(keys.mongodb_link,'Matchs','League_of_Legends')
-
-# print(db_match.list_all_available_match_with_condition('League_of_Legends',game_mode = 'normal'))
-            
 
 
 

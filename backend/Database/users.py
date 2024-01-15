@@ -21,6 +21,4 @@ class DB_Users:
     def check_user_exist(self,discord_id):
         query = {'id':discord_id}
         return self.collection.find_one(query) is not None
-        
-    def register_user(self,discord_user_data):
            

@@ -1,7 +1,4 @@
 
-.App-link {
-  color: #61dafb;
-}
 
 .App-body img{
   width: 500px;
@@ -10,10 +7,9 @@
 }
 .App-Blog {
   padding-top: 150px;
-  background-color: rgb(0, 0, 0);
 }
 .App-header {
   position: fixed;
-  background-color: white;
   width: 100%;
+  z-index: 100;
 }

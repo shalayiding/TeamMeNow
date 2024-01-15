@@ -7,7 +7,7 @@ module.exports = {
   theme: {
     extend: {},
   },
-  darkMode: "class",
+  darkMode: "media",
 
   plugins: [nextui()],
 }
