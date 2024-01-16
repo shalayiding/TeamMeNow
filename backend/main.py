@@ -32,7 +32,7 @@ def register():
     code = request.args.get('code')
     print(code)
     if code:
-        # https://discord.com/api/oauth2/authorize?client_id=1195266447006502942&response_type=code&redirect_uri=http%3A%2F%2Fec2-18-216-31-58.us-east-2.compute.amazonaws.com%2Flink%2Fdiscord&scope=identify
+       
         discord_oauth = DCoauth()
         data = discord_oauth.exchange_code(str(code))
 

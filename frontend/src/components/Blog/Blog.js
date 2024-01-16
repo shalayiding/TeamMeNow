@@ -3,10 +3,7 @@ import "./Blog.css"; // Assuming you have a CSS file for styling
 import MatchCard from '../MatchCard/MatchCard';
 function Blog({gameData}) {
   const isGameDataArray = Array.isArray(gameData) && gameData.length > 0;
-
-  console.log("herer is the data",gameData);
-
-
+  console.log(gameData);
 
   return (
     
