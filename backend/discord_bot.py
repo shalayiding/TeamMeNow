@@ -4,6 +4,11 @@ from discord import app_commands
 from discord.ext import commands
 import api_keys as keys
 
+game_list = ['League of Legends'
+]
+
+
+
 def run_discord_bot():
     bot = commands.Bot(command_prefix="ms!", intents=discord.Intents.all())
     @bot.event
@@ -23,7 +28,10 @@ def run_discord_bot():
     discord.app_commands.Choice(name='Apex Legends', value='Apex Legends')
 ])
     async def makematch(interaction: discord.Interaction,match_name:str):
-        await interaction.response.send_message(f'Hey {interaction.user.mention}! This is the game : {match_name}')
+        await interaction.response.send_message(f'Hey {interaction.user.mention}! your id is :{interaction.user.id} This is the game : {match_name}')
+    
+    
+    
     
     bot.run(keys.discord_bot_token)    
             
