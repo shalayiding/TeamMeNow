@@ -11,7 +11,7 @@ import bson.json_util as json_util
 
 
 app = Flask(__name__)
-db_match = DB_Matchs(keys.mongodb_link,"Matchs","League_of_Legends")
+db_match = DB_Matchs(keys.mongodb_link,"Matchs","game")
 db_user = DB_Users(keys.mongodb_link,'Discord_Users','Basic_Information')
 CORS(app) 
 
@@ -29,24 +29,28 @@ def find_game():
         return jsonify({"status": "error", "message": str(e)}), 500
     
     
-
-
 # create new match into the database
 @app.route('/v1/matchs',methods= ['POST'])
 def create_match():
     data = request.json
-    required_fields = ['host_name', 'host_id', 'game_name', 'game_mode', 'max_player', 'current_player', 'description']
+    required_fields = ['host_name', 'host_id', 'game_name', 'game_mode', 'max_player', 'current_player', 'description','avatar_uri','expire_time']
     if not all(field in data for field in required_fields):
         missing = [field for field in required_fields if field not in data]
         return jsonify({"status": "error", "message": f"Missing fields: {', '.join(missing)}"}), 400
-     
+    
     try:
         db_match.insert_match(data.get('host_name'), data.get('host_id'), data.get('game_name'),
-                              data.get('game_mode'), data.get('max_player'), data.get('current_player'), data.get('description'))
+                              data.get('game_mode'), data.get('max_player'), 
+                              data.get('current_player'), data.get('description'),
+                              data.get('avatar_uri'),data.get('expire_time'))
         
         return jsonify({"status": "success", "message": f"inserted data {data}"}), 201
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+
+
+
+
 
 
 

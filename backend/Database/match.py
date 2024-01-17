@@ -24,7 +24,7 @@ class DB_Matchs:
     
         
     #insert the match into the specific game 
-    def insert_match(self,host_name,host_id,game_name,game_mode,max_player,current_player,description):  
+    def insert_match(self,host_name,host_id,game_name,game_mode,max_player,current_player,description,avatar_uri,expire_time):  
        
         timestamp = datetime.now().strftime("%Y/%m/%d/%H:%M:%S")
         try :
@@ -35,6 +35,8 @@ class DB_Matchs:
                     'max_player':max_player,
                     'current_player':current_player,
                     'description':description,
+                    'avatar_uri':avatar_uri,
+                    'expire_time':expire_time,
                     'create_time' : timestamp}
             self.collection.insert_one(query)
         except Exception as e :
