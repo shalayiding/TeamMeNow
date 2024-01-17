@@ -54,7 +54,9 @@ def create_match():
 
 
 
-@app.route('/v1/users/<id>')
+
+
+@app.route('/v1/users')
 def find_user(id):
     return jsonify({id:'rew'})
     
