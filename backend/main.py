@@ -11,25 +11,47 @@ import bson.json_util as json_util
 
 
 app = Flask(__name__)
+db_match = DB_Matchs(keys.mongodb_link,"Matchs","League_of_Legends")
+db_user = DB_Users(keys.mongodb_link,'Discord_Users','Basic_Information')
 CORS(app) 
 
 
+# return  match information depending on the game
+@app.route('/v1/matchs',methods = ['GET'])
+def find_game():
+    gamename = request.args.get('gamename')
+    gamemode = request.args.get('gamemode')
+    try:
+        found_matches = db_match.list_all_available_match_with_condition(gamename,gamemode)
+        matches_json = json_util.dumps(found_matches)
+        return jsonify({"status":"success","matches":matches_json}), 200
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+    
+    
 
-# return simple match information depending on the game
-@app.route('/v1/game/<gamename>')
-def find_game(gamename):
-    found_matches = db_match.list_all_available_match_with_condition(str(gamename))
-    if found_matches is None:
-        return jsonify({"matches": []}), 400, {'ContentType': 'application/json'}
-    matches_json = json_util.dumps(found_matches)
-    return matches_json, 200, {'ContentType': 'application/json'}
+
+# create new match into the database
+@app.route('/v1/matchs',methods= ['POST'])
+def create_match():
+    data = request.json
+    required_fields = ['host_name', 'host_id', 'game_name', 'game_mode', 'max_player', 'current_player', 'description']
+    if not all(field in data for field in required_fields):
+        missing = [field for field in required_fields if field not in data]
+        return jsonify({"status": "error", "message": f"Missing fields: {', '.join(missing)}"}), 400
+     
+    try:
+        db_match.insert_match(data.get('host_name'), data.get('host_id'), data.get('game_name'),
+                              data.get('game_mode'), data.get('max_player'), data.get('current_player'), data.get('description'))
+        
+        return jsonify({"status": "success", "message": f"inserted data {data}"}), 201
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 
-@app.route('/v1/user/<id>')
+
+@app.route('/v1/users/<id>')
 def find_user(id):
-    
-    
-    
     return jsonify({id:'rew'})
     
 
@@ -58,8 +80,7 @@ def register():
 # main 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=80)
-    db_match = DB_Matchs(keys.mongodb_link,"Matchs","League_of_Legends")
-    db_user = DB_Users(keys.mongodb_link,'Discord_Users','Basic_Information')
+    
     
 
 
