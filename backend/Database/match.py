@@ -24,7 +24,7 @@ class DB_Matchs:
     
         
     #insert the match into the specific game 
-    def insert_match(self,host_name,host_id,game_name,game_mode,max_player,current_player,description,avatar_uri,expire_time):  
+    def insert_match(self,host_name,host_id,game_name,game_mode,max_player,current_player,player_count,description,avatar_uri,expire_time):  
        
         timestamp = datetime.now().strftime("%Y/%m/%d/%H:%M:%S")
         try :
@@ -34,6 +34,7 @@ class DB_Matchs:
                     'game_mode':game_mode,
                     'max_player':max_player,
                     'current_player':current_player,
+                    "player_count":player_count,
                     'description':description,
                     'avatar_uri':avatar_uri,
                     'expire_time':expire_time,

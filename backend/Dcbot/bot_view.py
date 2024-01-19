@@ -36,8 +36,9 @@ class SubmitButton(discord.ui.Button):
             'host_id':user.id,
             'game_name':selected_options[0],
             'game_mode':selected_options[1],
-            'max_player':5,
-            'current_player':selected_options[2],
+            'max_player':"unknow",
+            'current_player':"unknow",
+            "player_count":selected_options[2],
             'description':f"Quick Make Match using Discord Bot, {user.name} is looking for {selected_options[2]} player in {selected_options[0]} in {selected_options[1]} mode" ,
             'avatar_uri':f"{user.avatar}",
             'expire_time':4*3600,
@@ -47,17 +48,26 @@ class SubmitButton(discord.ui.Button):
         
         
         async with aiohttp.ClientSession() as session:
-            async with session.post('http://localhost:80/v1/matchs', json=data) as response:
-                if response.status == 200:
+            async with session.post('http://localhost:80/v1/matchs', json=data) as api_response:
+                if api_response.status == 200:
                     print("Successfully sent the data.")
+                    for select_menu in view.select_menus:
+                        select_menu.disabled = True
+                    self.disabled = True
+                    await interaction.response.edit_message(view=view)
+                    await interaction.followup.send(
+                        f'Match Details:\n'
+                        f'Game: {data.get("game_name")}\n'
+                        f'Mode: {data.get("game_mode")}\n'
+                        f'Looking for: {data.get("player_count")}\n'
+                        f'Time: {data.get("create_time")}'
+                    )
+                    
                 else:
-                    response_text = await response.text()
-                    print(f"Failed to send data. Status code: {response.status}. Response: {response_text}")
+                    api_response_text = await api_response.text()
+                    await interaction.response.send_message(f"Failed to send data. Status code: {api_response.status}. Response: {api_response_text}")
         
-        for select_menu in view.select_menus:
-            select_menu.disabled = True
-        self.disabled = True
-        await interaction.response.edit_message(view=view)
+        
         # await interaction.followup.send(f'You submitted: {", ".join(selected_options)} , you id = {user.id}')
         # await interaction.followup.send(f"{data}")
 
