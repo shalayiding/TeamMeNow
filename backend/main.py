@@ -1,5 +1,5 @@
 from flask import request,Flask,jsonify
-from discord_oauth2 import DCoauth
+from Dcbot.discord_oauth2 import DCoauth
 import requests
 import random
 from flask_cors import CORS  # Import CORS
@@ -44,7 +44,7 @@ def create_match():
                               data.get('current_player'), data.get('description'),
                               data.get('avatar_uri'),data.get('expire_time'))
         
-        return jsonify({"status": "success", "message": f"inserted data {data}"}), 201
+        return jsonify({"status": "success", "message": f"inserted data {data}"}), 200
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 

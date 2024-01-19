@@ -43,8 +43,8 @@ class DB_Matchs:
             print(f"An error occurred: {e}")
                 
     def list_all_available_match_with_condition(self,game_name, game_mode):
-        query = {"$expr": {"$lt": ["$current_player", "$max_player"]}}
-        
+        # query = {"$expr": {"$lt": ["$current_player", "$max_player"]}}
+        query = {}
         if game_mode and game_mode:
             query['game_name'] = game_name
             query['game_mode'] = game_mode

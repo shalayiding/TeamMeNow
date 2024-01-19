@@ -3,7 +3,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 import api_keys as keys
-import bot_view
+import Dcbot.bot_view as bot_view
 
  
 
@@ -24,9 +24,10 @@ def run_discord_bot():
     async def makematch(interaction: discord.Interaction):
         item_lists = [['League of Legends','Valorant','Minecraft','Apex Legends'],
                       ['Rank', 'Normal'],
-                      ['1','2','3','4']]
-        place_holder = ["GameName", "GameMode", "Number of Player Looking for"]
-        description = ['Select game name', 'Select game mode', 'People you need']
+                      ['1','2','3','4'],
+                      ]
+        place_holder = ["GameName", "GameMode", "Looking For"]
+        description = ['Select game name', 'Select game mode', 'How many player are you looking for' ]
         await interaction.response.send_message(f'Hey {interaction.user.mention}! Please select Game Name, Game Mode, Number of Player you looking for:', 
                                                 view=bot_view.MatchView(item_lists,place_holder,description=description))
 
