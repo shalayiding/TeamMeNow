@@ -28,10 +28,10 @@ function Header({fetchData}) {
         <p className="font-bold text-inherit">TEAMUP</p>
       </NavbarBrand>
         
-      <NavbarContent className="hidden sm:flex gap-10" justify="center">
+      <NavbarContent className="hidden gap-10 sm:flex" justify="center">
         <NavbarItem>
           <NavbarBrand>
-            <Link color="foreground" href="#" onClick={() => fetchData('League_of_Legends')}>
+            <Link color="foreground" href="#" onClick={() => fetchData('League of Legends')}>
             <Image src={lol_icon} className="invert-image uniform-icon-size" />
             League of Legends
             </Link>

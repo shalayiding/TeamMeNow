@@ -10,7 +10,7 @@ function App() {
   
   const [gameData,getGameData] = useState(null)
   const fetchData = (gameName) => {
-    fetch(`http://localhost:80/v1/game/${gameName}`)
+    fetch(`http://localhost:80/v1/matchs?gamename=${gameName}`)
       .then(response => response.json())
       .then(data => {
         getGameData(data);
@@ -18,7 +18,7 @@ function App() {
       .catch(error => console.error('Error fetching data:', error));
   };
   useEffect(()=>{
-    const defaultGameName = "League_of_Legends";
+    const defaultGameName = "League of Legends";
     fetchData(defaultGameName);
   },[]);
 
