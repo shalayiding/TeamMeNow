@@ -1,0 +1,74 @@
+import asyncio
+import discord
+from discord import app_commands
+from discord.ext import commands
+import api_keys as keys
+from datetime import datetime,timedelta
+import requests
+import aiohttp
+
+
+class MatchSelect(discord.ui.Select):
+    def __init__(self, items, place_holder,description):
+        options = [discord.SelectOption(label=item) for item in items]
+        super().__init__(placeholder=place_holder, min_values=1, max_values=1, options=options)
+
+    async def callback(self, interaction: discord.Interaction):
+        await interaction.response.defer()
+
+class SubmitButton(discord.ui.Button):
+    def __init__(self, label: str, style: discord.ButtonStyle):
+        super().__init__(label=label, style=style)
+
+    async def callback(self, interaction: discord.Interaction):
+        view: MatchView = self.view
+
+        # Check if all select menus have a selected value
+        if not all(len(select_menu.values) > 0 for select_menu in view.select_menus):
+            await interaction.response.send_message('Please make sure you have selected an option in all menus.')
+            return
+
+        timestamp = datetime.now().strftime("%Y/%m/%d/%H:%M:%S")
+        selected_options = [select_menu.values[0] for select_menu in view.select_menus]
+        user = interaction.user
+        data = {
+            'host_name':user.name,
+            'host_id':user.id,
+            'game_name':selected_options[0],
+            'game_mode':selected_options[1],
+            'max_player':5,
+            'current_player':selected_options[2],
+            'description':f"Quick Make Match using Discord Bot, {user.name} is looking for {selected_options[2]} player in {selected_options[0]} in {selected_options[1]} mode" ,
+            'avatar_uri':f"{user.avatar}",
+            'expire_time':4*3600,
+            'create_time' : timestamp
+            }
+        print(data)
+        
+        
+        async with aiohttp.ClientSession() as session:
+            async with session.post('http://localhost:80/v1/matchs', json=data) as response:
+                if response.status == 200:
+                    print("Successfully sent the data.")
+                else:
+                    response_text = await response.text()
+                    print(f"Failed to send data. Status code: {response.status}. Response: {response_text}")
+        
+        for select_menu in view.select_menus:
+            select_menu.disabled = True
+        self.disabled = True
+        await interaction.response.edit_message(view=view)
+        # await interaction.followup.send(f'You submitted: {", ".join(selected_options)} , you id = {user.id}')
+        # await interaction.followup.send(f"{data}")
+
+
+class MatchView(discord.ui.View):
+    def __init__(self, item_lists,place_holder,description):
+        super().__init__()
+        self.select_menus = []
+        for index in range(0,len(item_lists)):
+            self.select_menus.append(MatchSelect(item_lists[index],
+                                                 place_holder[index],description[index]))
+        for select_menu in self.select_menus:
+            self.add_item(select_menu)
+        self.add_item(SubmitButton("Create", discord.ButtonStyle.blurple))
