@@ -10,24 +10,22 @@ import {
 
 function MatchCard({gameData}) {
 
-  console.log(gameData);
-
   return (
     <Card className="py-5 w-[350px] rounded-lg shadow">
       <CardHeader className="flex-col items-start px-4 pt-2 pb-4">
         
         <div className="flex items-center mb-2">
-          <Avatar src="https://i.pravatar.cc/150?u=a042581f4e29026024d" />
+          <Avatar src={gameData.game_uri} />
           <p className="ml-2 text-lg font-bold uppercase">{gameData.game_name}</p>
         </div>
-        <small className="text-default-500">Current Looking for {gameData.max_player - gameData.current_player} Player</small>
+        <small className="text-default-500">Current Looking for {gameData.player_count} Player</small>
       </CardHeader>
       <CardBody className="py-2">
         <h5 className="font-bold">Detail</h5>
 
         
         <div className="flex items-center mt-2 bottom-2 left-2">
-          <Avatar src="https://i.pravatar.cc/150?u=a042581f4e29026024d" />
+          <Avatar src={gameData.avatar_uri} />
           <span className="ml-2 text-sm">{gameData.host_name}</span>
         </div>
         <Textarea
