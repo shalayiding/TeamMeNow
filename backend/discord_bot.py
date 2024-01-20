@@ -20,16 +20,29 @@ def run_discord_bot():
         except Exception as e:
             print(e)
 
-    @bot.tree.command(name="makematch")
+    @bot.tree.command(name="makematch",description="Create your own match, and start to pick player")
     async def makematch(interaction: discord.Interaction):
-        item_lists = [['League of Legends','Valorant','Minecraft','Apex Legends'],
+        item_lists = [['League of Legends','Valorant','Apex Legends','Other'],
                       ['Rank', 'Normal'],
                       ['1','2','3','4'],
                       ]
-        place_holder = ["GameName", "GameMode", "Looking For"]
-        description = ['Select game name', 'Select game mode', 'How many player are you looking for' ]
-        await interaction.response.send_message(f'Hey {interaction.user.mention}! Please select Game Name, Game Mode, Number of Player you looking for:', 
-                                                view=bot_view.MatchView(item_lists,place_holder,description=description))
+        place_holder = ["GameName", "GameMode","Number of Player looking for"]
+        description = ['Select game name', 'Select game mode',"Player you need"]
+        await interaction.response.send_message(f'Hey {interaction.user.mention}! Thanks for using quick make match, Please select Game Name, Game Mode, Number of Player you looking for:', 
+                                                view=bot_view.MatchView(item_lists,place_holder,description=description,botton_type="makematch"))
+
+
+    # find quick match using discord bot
+    @bot.tree.command(name="findmatch",description="Find the match other people create,and join other party")
+    async def findmatch(interaction:discord.Interaction):
+        item_list = [['League of Legends','Valorant','Apex Legends','Other'],
+                      ['Rank', 'Normal']
+                      ]
+        place_holder = ["GameName", "GameMode"]
+        description = ['Select game name', 'Select game mode' ]    
+        await interaction.response.send_message(f'Hey {interaction.user.mention}! Thanks for using quick find match, Please select Game Name, Game Mode, and Your Team size :',
+                                                view=bot_view.MatchView(item_list,place_holder,description=description,botton_type="findmatch"))
+        
 
     bot.run(keys.discord_bot_token)
 

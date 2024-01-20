@@ -28,7 +28,7 @@ class DB_Matchs:
        
         timestamp = datetime.now().strftime("%Y/%m/%d/%H:%M:%S")
         try :
-            query = {'host_name':host_name,
+            data = {'host_name':host_name,
                     'host_id':host_id,
                     'game_name':game_name,
                     'game_mode':game_mode,
@@ -39,7 +39,7 @@ class DB_Matchs:
                     'avatar_uri':avatar_uri,
                     'expire_time':expire_time,
                     'create_time' : timestamp}
-            self.collection.insert_one(query)
+            self.collection.insert_one(data)
         except Exception as e :
             print(f"An error occurred: {e}")
                 

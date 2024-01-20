@@ -1,7 +1,9 @@
 import asyncio
+from typing import Any
 import discord
 from discord import app_commands
 from discord.ext import commands
+from discord.interactions import Interaction
 import api_keys as keys
 from datetime import datetime,timedelta
 import requests
@@ -16,7 +18,34 @@ class MatchSelect(discord.ui.Select):
     async def callback(self, interaction: discord.Interaction):
         await interaction.response.defer()
 
-class SubmitButton(discord.ui.Button):
+
+class FindButton(discord.ui.Button):
+    def __init__(self,label:str,style:discord.ButtonStyle):
+        super().__init__(label=label,style=style)
+        
+    async def callback(self, interaction: Interaction) -> Any:
+        view:MatchView = self.view
+         # Check if all select menus have a selected value
+        if not all(len(select_menu.values) > 0 for select_menu in view.select_menus):
+            await interaction.response.send_message('Please make sure you have selected an option in all menus.')
+            return
+        selected_options = [select_menu.values[0] for select_menu in view.select_menus]
+        user = interaction.user
+        async with aiohttp.ClientSession() as session:
+            async with session.get(f'http://localhost:80/v1/matchs?gamename={selected_options[0]}&gamemode={selected_options[1]}') as api_response:
+                
+                if api_response.status == 200:
+                    data = await api_response.json()
+                    print("Successfully recived the data.")
+                    for select_menu in view.select_menus:
+                        select_menu.disabled = True
+                    self.disabled = True
+                    await interaction.response.edit_message(view=view)
+                    print(data["matches"][0])
+                    await interaction.followup.send(f"here is your data \n {str(data["matches"][0])}")
+
+
+class JoinButton(discord.ui.Button):
     def __init__(self, label: str, style: discord.ButtonStyle):
         super().__init__(label=label, style=style)
 
@@ -73,7 +102,7 @@ class SubmitButton(discord.ui.Button):
 
 
 class MatchView(discord.ui.View):
-    def __init__(self, item_lists,place_holder,description):
+    def __init__(self, item_lists,place_holder,description,botton_type):
         super().__init__()
         self.select_menus = []
         for index in range(0,len(item_lists)):
@@ -81,4 +110,7 @@ class MatchView(discord.ui.View):
                                                  place_holder[index],description[index]))
         for select_menu in self.select_menus:
             self.add_item(select_menu)
-        self.add_item(SubmitButton("Create", discord.ButtonStyle.blurple))
+        if botton_type == "findmatch":
+            self.add_item(FindButton("Find",discord.ButtonStyle.green))
+        else:
+            self.add_item(JoinButton("Create", discord.ButtonStyle.blurple))
