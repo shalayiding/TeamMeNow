@@ -42,7 +42,7 @@ class FindButton(discord.ui.Button):
                     self.disabled = True
                     await interaction.response.edit_message(view=view)
                     print(data["matches"][0])
-                    await interaction.followup.send(f"here is your data \n {str(data["matches"][0])}")
+                    await interaction.followup.send("here is your data \n")
 
 
 class JoinButton(discord.ui.Button):

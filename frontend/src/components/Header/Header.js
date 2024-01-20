@@ -39,7 +39,7 @@ function Header({fetchData}) {
         </NavbarItem>
         <NavbarItem>
           <NavbarBrand>
-            <Link color="foreground" href="#" onClick={() => fetchData('Apex')}>
+            <Link color="foreground" href="#" onClick={() => fetchData('Apex Legends')}>
             <Image src={apex_icon} className="invert-image uniform-icon-size" />
             Apex
             </Link>
@@ -55,9 +55,9 @@ function Header({fetchData}) {
         </NavbarItem>
         <NavbarItem>
           <NavbarBrand>
-            <Link color="foreground"  href="#" onClick={() => fetchData('Other_games')}>
+            <Link color="foreground"  href="#" onClick={() => fetchData('Other')}>
             <Image src={others_icon} className="invert-image uniform-icon-size" />
-            Other Games
+            Other
             </Link>
           </NavbarBrand>
         </NavbarItem>
