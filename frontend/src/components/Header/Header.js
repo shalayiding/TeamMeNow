@@ -21,10 +21,11 @@ function Header() {
   return (
     <Navbar>
         
-      <NavbarBrand justify="start">
-        <Image  className="flex items-center mr-2 text-lg italic font-semibold hover:scale-95 active:scale-95" src={logo} />
-
+      <NavbarBrand  className="flex items-center mr-2 text-lg italic font-semibold hover:scale-95 active:scale-95" justify="start">
+      <Link color="foreground" href="#" className="flex items-center mr-2 text-lg italic font-semibold hover:scale-95 active:scale-95" >
+        <Image  className="object-contain object-center w-12 h-12" src={logo} />
         <p className="font-bold text-inherit">TEAMUP</p>
+        </Link>
       </NavbarBrand>
         
       <NavbarContent className="hidden gap-10 sm:flex" justify="center">
