@@ -1,7 +1,7 @@
 from flask import request,Flask,jsonify,session,redirect, url_for,Blueprint
 from models.match import DB_Matchs
 from models.users import DB_Users
-import api_keys as keys
+import backend.config as keys
 from bson import json_util
 
 
