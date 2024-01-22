@@ -5,30 +5,28 @@ from models.users import DB_Users
 import api_keys as keys
 
 
-
+# setting blueprint and mongodb properties
 user_bp = Blueprint('user_bp', __name__)
-
 db_match = DB_Matchs(keys.mongodb_link,"Matchs","game")
 db_user = DB_Users(keys.mongodb_link,'Discord_Users','Basic_Information')
 
 
 
+# get user detail information if the user is login or using discord bot
 @user_bp.route('/user',methods=['GET'])
 def finduser():
     user_id = request.args.get('id')
     token = request.args.get('token')
     if token and token == keys.discord_bot_token:
         return {"data":'testing user data'},200
-    if user_id:
-        print(user_id)
-        
+    
     if user_id and ('user_id') in session and (user_id == session['user_id']):
         return jsonify(session.get('user_info')),200
     else:
         return "You have not linked your Discord Account",400
 
 
-
+#oauth2 with to link/discord
 @user_bp.route('/link/discord',methods=['GET'])
 def register():
     code = request.args.get('code')

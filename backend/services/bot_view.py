@@ -96,9 +96,7 @@ class JoinButton(discord.ui.Button):
                     api_response_text = await api_response.text()
                     await interaction.response.send_message(f"Failed to send data. Status code: {api_response.status}. Response: {api_response_text}")
         
-        
-        # await interaction.followup.send(f'You submitted: {", ".join(selected_options)} , you id = {user.id}')
-        # await interaction.followup.send(f"{data}")
+
 
 
 class MatchView(discord.ui.View):

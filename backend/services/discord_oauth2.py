@@ -8,6 +8,7 @@ class DCoauth:
         self.CLIENT_SECRET = apikey.discord_client_secret
         self.REDIRECT_URI = apikey.discord_redirect_url 
 
+    # exchange the code using oauth2 token to access token 
     def exchange_code(self,code):
         data = {
             'client_id': self.CLIENT_ID,
@@ -46,7 +47,8 @@ class DCoauth:
         }
         requests.post('%s/oauth2/token/revoke' % self.API_ENDPOINT, data=data, headers=headers, auth=(self.CLIENT_ID, self.CLIENT_SECRET))
   
-  
+    
+    # get the current user using the access code 
     def get_current_user(self,access_token):
         headers = {
             'Authorization': f'Bearer {access_token}'

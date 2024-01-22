@@ -2,10 +2,8 @@
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from datetime import datetime,timedelta
-import sys
-sys.path.append('D:\\mygithub\\TeamMeUp\\backend')
-import api_keys as keys
 
+# all the operation related to the match will be here 
 class DB_Matchs:
     def __init__(self,db_url,db_name,collection_name) -> None:
         self.clint = MongoClient(db_url,server_api = ServerApi('1'))

@@ -2,10 +2,9 @@
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from datetime import datetime,timedelta
-import sys
-sys.path.append('/Users/shalayidingaierken/Documents/Code/Mygithub/TeamMeUp/backend')
-import api_keys as keys
 
+
+# all the user class operation will be here 
 class DB_Users:
     def __init__(self,db_url,db_name,collection_name) -> None:
         self.clint = MongoClient(db_url,server_api = ServerApi('1'))
