@@ -4,9 +4,8 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 from discord.interactions import Interaction
-import backend.config as keys
+import config as keys
 from datetime import datetime,timedelta
-import requests
 import aiohttp
 
 

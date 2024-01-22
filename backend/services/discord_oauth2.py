@@ -1,5 +1,5 @@
 import requests
-import backend.config as apikey
+import config as apikey
 
 class DCoauth:
     def __init__(self):

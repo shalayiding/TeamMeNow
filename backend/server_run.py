@@ -1,7 +1,7 @@
 from flask import request,Flask,jsonify,session,redirect, url_for
 from services.discord_oauth2 import DCoauth
 from flask_cors import CORS  # Import CORS
-import api_keys as keys
+import config as keys
 
 
 # getting the blueprint for user and match route

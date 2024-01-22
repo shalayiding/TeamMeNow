@@ -2,7 +2,7 @@ from flask import request,Flask,jsonify,session,redirect, url_for,Blueprint
 from services.discord_oauth2 import DCoauth
 from models.match import DB_Matchs
 from models.users import DB_Users
-import backend.config as keys
+import config as keys
 
 
 # setting blueprint and mongodb properties
