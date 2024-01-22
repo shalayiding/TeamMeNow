@@ -10,6 +10,8 @@ class DCoauth:
 
     def exchange_code(self,code):
         data = {
+            'client_id': self.CLIENT_ID,
+            'client_secret': self.CLIENT_SECRET,
             'grant_type': 'authorization_code',
             'code': code,
             'redirect_uri': self.REDIRECT_URI
@@ -17,10 +19,8 @@ class DCoauth:
         headers = {
             'Content-Type': 'application/x-www-form-urlencoded'
         }
-        print(data)
-        print(headers)
-        r = requests.post(f'{self.API_ENDPOINT}/oauth2/token', data=data, headers=headers, auth=(self.CLIENT_ID, self.CLIENT_SECRET))
         
+        r = requests.post(f'{self.API_ENDPOINT}/oauth2/token', data=data, headers=headers)
         r.raise_for_status()
         return r.json()
   

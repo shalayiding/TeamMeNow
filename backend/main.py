@@ -1,4 +1,4 @@
-from flask import request,Flask,jsonify
+from flask import request,Flask,jsonify,session,redirect, url_for
 from Dcbot.discord_oauth2 import DCoauth
 import requests
 import random
@@ -11,6 +11,8 @@ import bson.json_util as json_util
 
 
 app = Flask(__name__)
+app.secret_key = keys.flask_secret_key
+
 db_match = DB_Matchs(keys.mongodb_link,"Matchs","game")
 db_user = DB_Users(keys.mongodb_link,'Discord_Users','Basic_Information')
 CORS(app) 
@@ -53,17 +55,18 @@ def create_match():
 
 
 
-
-
-
-@app.route('/v1/users')
-def find_user(id):
-    return jsonify({id:'rew'})
+@app.route('/v1/user',methods=['GET'])
+def testing_user():
+        
+    user_id = request.args.get('id')
+    token = request.args.get('token')
+    if token and token == keys.discord_bot_token:
+        return {"data":'testing user data'},200
     
-
-@app.route('/')
-def hello():
-    return '<p> hello </p>'
+    if user_id and session['user_id'] and (user_id == session['user_id']):
+        return {session['user_info']},200
+    else:
+        return "You have not linked your Discord Account",400
 
 
 
@@ -73,13 +76,35 @@ def register():
     print(code)
     if code:
         discord_oauth = DCoauth()
-        data = discord_oauth.exchange_code(str(code))
-        # user = discord_oauth.get_current_user(data['access_token'])
-        # print(user)
-        return data
+        try :
+            data = discord_oauth.exchange_code(str(code))
+        except Exception as e:
+            return "Cannot Link you discord icon try to back to the home page and do it again",400
+        
+        if data['access_token']:
+            user = discord_oauth.get_current_user(data['access_token'])
+            session['user_id'] = user['id']
+            session['user_info'] = user
+            return "You have linked your discord icon, all set",200
+        else:
+            return "No access token found ",400
     else:
         return 'No code provided, discord linked faild', 400
 
+
+
+
+
+@app.route('/')
+def home():
+    return 'This is the home page.'
+
+
+@app.route('/logout')
+def unlink_discord():
+    session.pop('user_id',None)
+    session.pop('user_info',None)
+    return redirect(url_for('home'))
 
 
 
