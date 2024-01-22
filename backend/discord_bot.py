@@ -3,7 +3,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 import api_keys as keys
-import Dcbot.bot_view as bot_view
+import services.bot_view as bot_view
 from datetime import datetime,timedelta
 import aiohttp
 
