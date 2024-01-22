@@ -1,8 +1,10 @@
 import './App.css';
-import Header from './components/Header/Header';
-import Footer from './components/Footer/Footer';
-import Blog from './components/Blog/Blog';
+
+import Match from "./pages/Match"
+import Home from "./pages/Home"
 import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
 
 
 function App() {
@@ -12,13 +14,20 @@ function App() {
 
 
   return (
- 
+    <Router>
+
+    <Routes>
     
-    <div className="App">
-      <Header/>
-      <Blog/>     
-      <Footer />
-    </div>
+    <Route path = "/match" element={<Match/>}></Route>
+    <Route path = "/" element={<Home/>}></Route>
+
+
+
+    </Routes>
+
+    </Router>
+    
+    
     
    
   );
