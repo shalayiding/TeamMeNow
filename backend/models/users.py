@@ -19,5 +19,17 @@ class DB_Users:
     
     def check_user_exist(self,discord_id):
         query = {'id':discord_id}
-        return self.collection.find_one(query) is not None
-           
+        return self.collection.find_one(query)
+     
+    def register_user(self,discord_id,global_name,source,avatar_uri,email=""):
+        data = {"dc_id":discord_id,
+                "dc_global_name":global_name,
+                "register_source":source,
+                "dc_avatar_uri":avatar_uri,
+                "dc_email":email}
+        try:
+            self.collection.insert_one(data)
+            return True
+        except Exception as e:
+            print(e)
+            return False            
