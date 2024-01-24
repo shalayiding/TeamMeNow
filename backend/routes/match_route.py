@@ -8,7 +8,7 @@ from bson import json_util
 # setting blueprint and mongodb properties
 match_bp = Blueprint('match_bp', __name__)
 db_match = DB_Matchs(keys.mongodb_link,"Matchs","game")
-db_user = DB_Users(keys.mongodb_link,'Discord_Users','Basic_Information')
+db_user = DB_Users(keys.mongodb_link,'Matchs','user')
 
 
 

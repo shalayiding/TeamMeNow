@@ -8,7 +8,7 @@ import config as keys
 # setting blueprint and mongodb properties
 user_bp = Blueprint('user_bp', __name__)
 db_match = DB_Matchs(keys.mongodb_link,"Matchs","game")
-db_user = DB_Users(keys.mongodb_link,'Discord_Users','Basic_Information')
+db_user = DB_Users(keys.mongodb_link,'Matchs','user')
 
 
 
@@ -18,32 +18,49 @@ def finduser():
     
     user_id = request.args.get('id')
     token = request.args.get('token')
-    
     #bot access 
     if token and token == keys.discord_bot_token and user_id:
         return jsonify({"data":db_user.check_user_exist(user_id)}),200
     
     # web access 
-    elif user_id and ('user_id') in session and (user_id == session['user_id']):
-        return jsonify({"data":db_user.check_user_exist(user_id)}),200
-   
+    elif ('user_id') in session:
+        print(session['user_info'])
+        return jsonify({"data":db_user.check_user_exist(session['user_id'])}),200
+    
     else:
         return jsonify({"message":"Something wet worng can't find data"}),400
 
 
 
-# @user_bp.route('/user/register',methods='POST')
-# def register():
-#     # get user info
-#     user_id = request.args.get('id')
-#     token = request.args.get('token')
-#     avatar_uri = request.args.get('avatar_uri')
-#     email = request.args.get('email')
-#     # check if the session is valid or not
-#     valid_user_session = ( ('user_id') in session and user_id and (user_id == session['user_id']))
-#     if valid_user_session and db_user.check_user_exist(user_id) == None:
-#         register_result = db_
+@user_bp.route('/user/register',methods=['POST'])
+def register_user():
+    # get user info
+    user_id = request.args.get('id')
+    token = request.args.get('token')
+    avatar_uri = request.args.get('avatar_uri')
+    email = request.args.get('email')
+    global_name = request.args.get('global_name')
+    # check if the session is valid or not
+    valid_user_session = ( ('user_id') in session and session['user_id'])
+    register_parts = (user_id and avatar_uri and global_name)
+    if valid_user_session and db_user.check_user_exist(user_id) == None:
         
+        try :
+            register_result = db_user.register_user(session['user_info']['id'],
+                                                session['user_info']['global_name'],
+                                                "web",
+                                                f"https://cdn.discordapp.com/avatars/{session['user_info']['id']}/{session['user_info']['avatar']}",
+                                                session['user_info']['email'])
+            return jsonify({"result":register_result}),200
+        except Exception as e:
+            return jsonify({"message":e}),400
+    elif token and token == keys.discord_bot_token and register_parts:
+        register_result = db_user.register_user(user_id,global_name,"bot",avatar_uri,email)
+        return jsonify({"result":register_result}),200
+    else:
+        return jsonify({"Messages":"Either user exist or are not able to insert"}),400
+    
+    
     
 #     valid_user_bot = (token and user_id and token == keys.discord_bot_token)
     
