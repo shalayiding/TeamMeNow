@@ -34,16 +34,17 @@ def finduser():
 
 @user_bp.route('/user/register',methods=['POST'])
 def register_user():
+    data = request.json 
     # get user info
-    user_id = request.args.get('id')
-    token = request.args.get('token')
-    avatar_uri = request.args.get('avatar_uri')
-    email = request.args.get('email')
-    global_name = request.args.get('global_name')
+    user_id = data.get('id')
+    token = data.get('token')
+    avatar_uri = data.get('avatar_uri')
+    email = data.get('email')
+    global_name = data.get('global_name')
     # check if the session is valid or not
     valid_user_session = ( ('user_id') in session and session['user_id'])
     register_parts = (user_id and avatar_uri and global_name)
-    if valid_user_session and db_user.check_user_exist(user_id) == None:
+    if valid_user_session and db_user.check_user_exist(session['user_info']['id']) == None:
         
         try :
             register_result = db_user.register_user(session['user_info']['id'],
