@@ -81,6 +81,12 @@ def register():
             user = discord_oauth.get_current_user(data['access_token'])
             session['user_id'] = user['id']
             session['user_info'] = user
+            db_user.register_user(session['user_info']['id'],
+                                    session['user_info']['global_name'],
+                                    "web",
+                                    f"https://cdn.discordapp.com/avatars/{session['user_info']['id']}/{session['user_info']['avatar']}",
+                                    session['user_info']['email'])
+
             return redirect(url_for('home'))
         else:
             return "No access token found ",400
