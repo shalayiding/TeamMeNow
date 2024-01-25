@@ -2,7 +2,7 @@
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from datetime import datetime,timedelta
-
+from bson import json_util 
 
 # all the user class operation will be here 
 class DB_Users:
@@ -18,8 +18,9 @@ class DB_Users:
         self.collection = self.db[collection_name]
     
     def check_user_exist(self,discord_id):
-        query = {'id':discord_id}
-        return self.collection.find_one(query)
+        query = {'dc_id':discord_id}
+    
+        return json_util.dumps(self.collection.find_one(query))
      
     def register_user(self,discord_id,global_name,source,avatar_uri,email=""):
         data = {"dc_id":discord_id,

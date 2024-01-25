@@ -15,7 +15,7 @@ app = Flask(__name__)
 app.register_blueprint(match_bp, url_prefix='/v1')
 app.register_blueprint(user_bp, url_prefix='/v1')
 app.secret_key = keys.flask_secret_key
-CORS(app) 
+CORS(app,supports_credentials=True,resources={r"/*": {"origins": "http://localhost:3000"}}) 
 
 
 # general testing 
@@ -32,5 +32,5 @@ def unlink_discord():
 
 # main 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0',port=80,debug=True)
+    app.run(host='localhost',port=5000,debug=True)
     

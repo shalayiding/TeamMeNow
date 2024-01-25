@@ -20,13 +20,16 @@ def finduser():
     token = request.args.get('token')
     #bot access 
     if token and token == keys.discord_bot_token and user_id:
-        return jsonify({"data":db_user.check_user_exist(user_id)}),200
-    
+        user = db_user.check_user_exist(user_id)
+        return jsonify({"data":user}),200
     # web access 
     elif ('user_id') in session:
-        print(session['user_info'])
-        return jsonify({"data":db_user.check_user_exist(session['user_id'])}),200
-    
+        user = db_user.check_user_exist(session['user_id'])
+        if user :
+            return jsonify({"data":user}),200
+        else :
+            return jsonify({"message":"didnt find the user"},404)
+        
     else:
         return jsonify({"message":"Something wet worng can't find data"}),400
 
@@ -78,16 +81,19 @@ def register():
         except Exception as e:
             return "Cannot Link you discord icon try to back to the home page and do it again",400
         if data['access_token']:
+            
             user = discord_oauth.get_current_user(data['access_token'])
+            print(user)
             session['user_id'] = user['id']
             session['user_info'] = user
-            db_user.register_user(session['user_info']['id'],
-                                    session['user_info']['global_name'],
-                                    "web",
-                                    f"https://cdn.discordapp.com/avatars/{session['user_info']['id']}/{session['user_info']['avatar']}",
-                                    session['user_info']['email'])
-
-            return redirect(url_for('home'))
+            if not db_user.check_user_exist(user['id']) :
+                db_user.register_user(session['user_info']['id'],
+                                        session['user_info']['global_name'],
+                                        "web",
+                                        f"https://cdn.discordapp.com/avatars/{session['user_info']['id']}/{session['user_info']['avatar']}",
+                                        session['user_info']['email'])
+                print(session['user_id'])
+            return redirect("http://localhost:3000/")
         else:
             return "No access token found ",400
     else:
