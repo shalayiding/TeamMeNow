@@ -45,7 +45,7 @@ function Header() {
       <NavbarBrand  className="flex items-center mr-2 text-lg italic font-semibold hover:scale-95 active:scale-95" justify="start">
       <Link color="foreground" href="/" className="flex items-center mr-2 text-lg italic font-semibold hover:scale-95 active:scale-95" >
         <Image  className="object-contain object-center w-12 h-12" src={logo} />
-        <p className="font-bold text-inherit">TEAMUP</p>
+        <p className="font-bold text-inherit">TeamMeUp</p>
         </Link>
       </NavbarBrand>
         

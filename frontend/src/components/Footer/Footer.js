@@ -1,13 +1,13 @@
 import React from 'react';
 import './Footer.css'; // Assuming you have a CSS file for styling
-
+import logo from "../Header/Images/new_logo.png"
 function Footer() {
     return (
         <footer className="footer">
             <div className="footer-content">
                 <div className="footer-section">
-                    <img src="path-to-your-logo.png" alt="Logo" className="footer-logo" />
-                    <p>Your Company Name</p>
+                    <img src={logo} alt="Logo" className="footer-logo" />
+                    <p>TeamMeUp</p>
                     <small>© {new Date().getFullYear()} Your Company. All Rights Reserved.</small>
                 </div>
                 <div className="footer-section">

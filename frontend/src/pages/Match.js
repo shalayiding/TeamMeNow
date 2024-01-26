@@ -13,9 +13,12 @@ function Match() {
   return (
 
     <div className="Match">
+      
       <Header/>
       <Blog/>     
       <Footer />
+
+
     </div>
 
 
