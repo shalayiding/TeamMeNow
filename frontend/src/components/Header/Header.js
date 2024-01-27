@@ -24,13 +24,10 @@ function Header() {
     fetch(`http://localhost:5000/v1/user/me`,{
       method: 'GET',
       credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        // Add any other headers your backend requires
-      },
     })
       .then(response => response.json())
       .then(data => {
+        console.log(data);
         setUserDataDetail(data);
       })
       .catch(error => console.error('Error fetching data:', error));
@@ -38,7 +35,8 @@ function Header() {
   useEffect(() => {
     fetchUserData();
   }, []);
-  console.log(userDataDetail);
+
+  
   return (
     <Navbar>
         
@@ -68,7 +66,7 @@ function Header() {
         </NavbarItem>
         
       </NavbarContent>
-      {isUserDataValid ? <UserCenter data={userDataDetail.data}></UserCenter> : (<LoginButton></LoginButton>)}
+      {isUserDataValid ? <UserCenter data={userDataDetail}></UserCenter> : (<LoginButton></LoginButton>)}
 
 
     </Navbar>

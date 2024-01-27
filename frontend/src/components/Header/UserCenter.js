@@ -11,7 +11,7 @@ import {
 } from "@nextui-org/react";
 
 function UserCenter({data}) {
-  const userData = JSON.parse(data);
+  const userData = data.data;
   return (
     <NavbarContent as="div" justify="end">
         

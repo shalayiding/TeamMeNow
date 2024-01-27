@@ -1,4 +1,4 @@
-from flask import request,Flask,jsonify,session,redirect, url_for,Blueprint
+from flask import request,Flask,jsonify,session,redirect, url_for,Blueprint,make_response
 from services.discord_oauth2 import DCoauth
 from models.match import DB_Matchs
 from models.users import DB_Users
@@ -15,7 +15,7 @@ db_user = DB_Users(keys.mongodb_link,'Matchs','user')
 
 # get user detail information if the user is login or using discord bot
 @user_bp.route('/user/me',methods=['GET'])
-@jwt_required()
+@jwt_required(locations=['cookies','headers'])
 def finduser():
     current_user = get_jwt_identity()
     user = db_user.find_user_by_id(current_user['_id'])
@@ -26,7 +26,7 @@ def finduser():
             "email":user["email"],
             }
     
-    return jsonify(data,200)
+    return jsonify({"data":data})
 
 
 
@@ -91,10 +91,13 @@ def linkDiscord():
                                             "web",
                                             f"https://cdn.discordapp.com/avatars/{user['id']}/{user['avatar']}",
                                             user['email'])
-                print(found_user)
-                expires = timedelta(hours=4)
+                
+                expires = timedelta(hours=3)
                 access_token = create_access_token(identity={"_id":found_user},expires_delta=expires)
-                return jsonify({"access_token":access_token},200)    
+                response = make_response(redirect("http://localhost:3000/"))
+                
+                response.set_cookie("access_token_cookie", access_token, httponly=True)
+                return response   
             except Exception as e:
                 return jsonify({"msg":"Something went wrong while registerinig you"},401)  
              

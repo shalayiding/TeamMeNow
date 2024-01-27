@@ -15,8 +15,10 @@ from routes.match_route import match_bp
 app = Flask(__name__)
 app.register_blueprint(match_bp, url_prefix='/v1')
 app.register_blueprint(user_bp, url_prefix='/v1')
+app.config['JWT_SECRET_KEY'] = keys.flask_secret_key 
 app.secret_key = keys.flask_secret_key
 jwt = JWTManager(app)
+
 CORS(app,supports_credentials=True,resources={r"/*": {"origins": "http://localhost:3000"}}) 
 
 
