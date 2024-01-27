@@ -2,7 +2,7 @@
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from datetime import datetime,timedelta
-from bson import json_util 
+from bson.objectid import ObjectId
 
 # all the user class operation will be here 
 class DB_Users:
@@ -17,20 +17,42 @@ class DB_Users:
         self.db = self.clint[db_name]
         self.collection = self.db[collection_name]
     
-    def check_user_exist(self,discord_id):
-        query = {'dc_id':discord_id}
     
-        return json_util.dumps(self.collection.find_one(query))
-     
+    # check if the user exist and return the mongodb register id
+    def check_user_exist(self,discord_id,email):
+        query = {}
+        if discord_id:
+            query['dc_id'] = discord_id
+        if email:
+            query['email'] = email
+        result = self.collection.find_one(query)
+        if result:
+            return str(result['_id'])
+        else:
+            return None
+
+    # register new user and give them id for that
     def register_user(self,discord_id,global_name,source,avatar_uri,email=""):
         data = {"dc_id":discord_id,
                 "dc_global_name":global_name,
                 "register_source":source,
                 "dc_avatar_uri":avatar_uri,
-                "dc_email":email}
+                "email":email}
+        result = self.collection.insert_one(data)
+        if result:
+            return result.inserted_id
+        else :
+            return None        
+        
+        
+    #find a user using thier mongodb it return the bson document         
+    def find_user_by_id(self, user_id_str):
         try:
-            self.collection.insert_one(data)
-            return True
+            user_id = ObjectId(user_id_str)
         except Exception as e:
-            print(e)
-            return False            
+            print(f"Error converting to ObjectId: {e}")
+            return None
+
+        user_document = self.collection.find_one({"_id": user_id})
+
+        return user_document

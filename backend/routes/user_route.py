@@ -3,7 +3,8 @@ from services.discord_oauth2 import DCoauth
 from models.match import DB_Matchs
 from models.users import DB_Users
 import config as keys
-
+from flask_jwt_extended import create_access_token,jwt_required, get_jwt_identity
+from datetime import timedelta
 
 # setting blueprint and mongodb properties
 user_bp = Blueprint('user_bp', __name__)
@@ -14,90 +15,93 @@ db_user = DB_Users(keys.mongodb_link,'Matchs','user')
 
 # get user detail information if the user is login or using discord bot
 @user_bp.route('/user/me',methods=['GET'])
+@jwt_required()
 def finduser():
+    current_user = get_jwt_identity()
+    user = db_user.find_user_by_id(current_user['_id'])
+    data = {"dc_id":user["dc_id"],
+            "dc_global_name":user["dc_global_name"],
+            "register_source":user["register_source"],
+            "dc_avatar_uri":user["dc_avatar_uri"],
+            "email":user["email"],
+            }
     
-    user_id = request.args.get('id')
-    token = request.args.get('token')
-    #bot access 
-    if token and token == keys.discord_bot_token and user_id:
-        user = db_user.check_user_exist(user_id)
-        return jsonify({"data":user}),200
-    # web access 
-    elif ('user_id') in session:
-        user = db_user.check_user_exist(session['user_id'])
-        if user :
-            return jsonify({"data":user}),200
-        else :
-            return jsonify({"message":"didnt find the user"},404)
-        
-    else:
-        return jsonify({"message":"Something wet worng can't find data"}),400
+    return jsonify(data,200)
 
 
 
-@user_bp.route('/user/register',methods=['POST'])
-def register_user():
-    data = request.json 
-    # get user info
-    user_id = data.get('id')
-    token = data.get('token')
-    avatar_uri = data.get('avatar_uri')
-    email = data.get('email')
-    global_name = data.get('global_name')
-    # check if the session is valid or not
-    valid_user_session = ( ('user_id') in session and session['user_id'])
-    register_parts = (user_id and avatar_uri and global_name)
-    if valid_user_session and db_user.check_user_exist(session['user_info']['id']) == None:
-        
-        try :
-            register_result = db_user.register_user(session['user_info']['id'],
-                                                session['user_info']['global_name'],
-                                                "web",
-                                                f"https://cdn.discordapp.com/avatars/{session['user_info']['id']}/{session['user_info']['avatar']}",
-                                                session['user_info']['email'])
-            return jsonify({"result":register_result}),200
-        except Exception as e:
-            return jsonify({"message":e}),400
-    elif token and token == keys.discord_bot_token and register_parts:
-        register_result = db_user.register_user(user_id,global_name,"bot",avatar_uri,email)
-        return jsonify({"result":register_result}),200
-    else:
-        return jsonify({"Messages":"Either user exist or are not able to insert"}),400
+@user_bp.route('/user/login',methods=['GET'])
+
+
+
+
+# @user_bp.route('/user/register',methods=['POST'])
+# def register_user():
+#     data = request.json 
+#     # get user info
+#     user_id = data.get('id')
+#     token = data.get('token')
+#     avatar_uri = data.get('avatar_uri')
+#     email = data.get('email')
+#     global_name = data.get('global_name')
+#     register_parts = (user_id and avatar_uri and global_name and email)
+#     if register_parts and db_user.check_user_exist(user_id,email) == None:
+#         register_type = "web"
+#         if token == keys.discord_bot_token:
+#             register_type = "bot"
+#         try :
+#             register_result = db_user.register_user(user_id,
+#                                 global_name,
+#                                 register_type,
+#                                 avatar_uri,
+#                                 email)
+#             return jsonify({"Message":"You have register to the database"}),200
+#         except Exception as e:
+#             return jsonify({"Message":e}),400
+#     else:
+#         return jsonify({"Message":"Either user exist or are not able to register you"}),400      
     
-    
-    
-#     valid_user_bot = (token and user_id and token == keys.discord_bot_token)
-    
+
         
     
 #oauth2 with to link/discord
 @user_bp.route('/link/discord',methods=['GET'])
-def register():
+def linkDiscord():
     code = request.args.get('code')
     if code:
         discord_oauth = DCoauth()
         try :
             data = discord_oauth.exchange_code(str(code))
         except Exception as e:
-            return "Cannot Link you discord icon try to back to the home page and do it again",400
+            return jsonify({"msg":"Cannot Link you discord account, try to back to the home page and do it again"},401)
+        
+        
         if data['access_token']:
-            
             user = discord_oauth.get_current_user(data['access_token'])
-            print(user)
-            session['user_id'] = user['id']
-            session['user_info'] = user
-            if not db_user.check_user_exist(user['id']) :
-                db_user.register_user(session['user_info']['id'],
-                                        session['user_info']['global_name'],
-                                        "web",
-                                        f"https://cdn.discordapp.com/avatars/{session['user_info']['id']}/{session['user_info']['avatar']}",
-                                        session['user_info']['email'])
-                print(session['user_id'])
-            return redirect("http://localhost:3000/")
+            
+            if not user:
+                return jsonify({"msg":"Didn't find your profile in linkedin"},404)
+            
+            try :
+                found_user = db_user.check_user_exist(user['id'],user['email'])
+                mongodb_id = ""
+                if found_user == None:
+                    mongodb_id = db_user.register_user(user['id'],
+                                            user['global_name'],
+                                            "web",
+                                            f"https://cdn.discordapp.com/avatars/{user['id']}/{user['avatar']}",
+                                            user['email'])
+                print(found_user)
+                expires = timedelta(hours=4)
+                access_token = create_access_token(identity={"_id":found_user},expires_delta=expires)
+                return jsonify({"access_token":access_token},200)    
+            except Exception as e:
+                return jsonify({"msg":"Something went wrong while registerinig you"},401)  
+             
         else:
-            return "No access token found ",400
+            return jsonify({"msg":"No access token found "},404)
     else:
-        return 'No code provided, discord linked faild', 400
+        return jsonify({"msg":"No code provided, discord linked faild"},404)
 
 
     
