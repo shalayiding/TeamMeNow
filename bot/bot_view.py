@@ -31,7 +31,7 @@ class FindButton(discord.ui.Button):
         selected_options = [select_menu.values[0] for select_menu in view.select_menus]
         user = interaction.user
         async with aiohttp.ClientSession() as session:
-            async with session.get(f'http://localhost:80/v1/matchs?gamename={selected_options[0]}&gamemode={selected_options[1]}') as api_response:
+            async with session.get(f'{keys.BACKEND_API_URL}/v1/matchs?gamename={selected_options[0]}&gamemode={selected_options[1]}') as api_response:
                 
                 if api_response.status == 200:
                     data = await api_response.json()
@@ -76,7 +76,7 @@ class JoinButton(discord.ui.Button):
         
         
         async with aiohttp.ClientSession() as session:
-            async with session.post('http://localhost:80/v1/matchs', json=data) as api_response:
+            async with session.post(f'{keys.BACKEND_API_URL}/v1/matchs', json=data) as api_response:
                 if api_response.status == 200:
                     print("Successfully sent the data.")
                     for select_menu in view.select_menus:

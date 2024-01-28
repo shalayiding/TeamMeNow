@@ -49,7 +49,7 @@ def run_discord_bot():
             'create_time' : timestamp
             }
         async with aiohttp.ClientSession() as session:
-            async with session.post('http://back-end:5000/v1/matchs', json=data) as api_response:
+            async with session.post(f'{keys.BACKEND_API_URL}/v1/matchs', json=data) as api_response:
                 if api_response.status == 200:
                     await interaction.response.send_message(
                         f'Match Details:\n'
