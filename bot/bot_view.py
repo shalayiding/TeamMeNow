@@ -7,7 +7,8 @@ from discord.interactions import Interaction
 import config as keys
 from datetime import datetime,timedelta
 import aiohttp
-
+import json
+from discord import Embed
 
 class MatchSelect(discord.ui.Select):
     def __init__(self, items, place_holder,description):
@@ -34,15 +35,38 @@ class FindButton(discord.ui.Button):
             async with session.get(f'{keys.BACKEND_API_URL}/v1/matchs?gamename={selected_options[0]}&gamemode={selected_options[1]}') as api_response:
                 
                 if api_response.status == 200:
+                    
                     data = await api_response.json()
                     print("Successfully recived the data.")
                     for select_menu in view.select_menus:
                         select_menu.disabled = True
                     self.disabled = True
                     await interaction.response.edit_message(view=view)
-                    print(data["matches"][0])
-                    await interaction.followup.send("here is your data \n")
-
+                    matches = json.loads(data['matches'])
+                    reply = "Here are the **TOP 3 search results**:\n\n"
+                    count = 0
+                    embeds = []
+                    for i in matches:
+                        embed = Embed(title=f"Match ID: {i['_id']['$oid']}", color=0x00ff00)  # You can change the color
+                        embed.set_thumbnail(url=i['avatar_uri'])
+                        embed.add_field(name="Host", value=i['host_name'], inline=False)
+                        embed.add_field(name="Game", value=f"{i['game_name']} - {i['game_mode']}", inline=False)
+                        embed.add_field(name="Players Needed", value=i['player_count'], inline=False)
+                        # embed.add_field(name="Description", value=i['description'], inline=False)
+                        embeds.append(embed)
+                        # reply += f"**Match ID**: `{i['_id']['$oid']}`\n"
+                        # reply += f"**Host Discord Name**: *{i['host_name']}*\n"
+                        # reply += f"**Game Name**: {i['game_name']}\n"
+                        # reply += f"**Game Mode**: {i['game_mode']}\n"
+                        # reply += f"**Player Needed**: `{i['player_count']}`\n"
+                        # reply += f"**Description**: {i['description']}\n\n"
+                        count+=1
+                        if count >= 3:
+                            break
+                    if len(embeds) !=0:        
+                        await interaction.followup.send(embeds=embeds)
+                    else:
+                        await interaction.followup.send("We didn't find any match,you can use / to create match")
 
 class JoinButton(discord.ui.Button):
     def __init__(self, label: str, style: discord.ButtonStyle):
