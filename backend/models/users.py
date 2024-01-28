@@ -56,3 +56,6 @@ class DB_Users:
         user_document = self.collection.find_one({"_id": user_id})
 
         return user_document
+    
+    def get_user_count(self):
+        return self.collection.count_documents({})

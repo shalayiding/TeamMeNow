@@ -2,6 +2,7 @@ from flask import request,Flask,jsonify,session,redirect, url_for,Blueprint,make
 from services.discord_oauth2 import DCoauth
 from models.match import DB_Matchs
 from models.users import DB_Users
+from models.visitor import DB_Visitor
 import config as keys
 from flask_jwt_extended import create_access_token,jwt_required, get_jwt_identity
 from datetime import timedelta
@@ -10,7 +11,7 @@ from datetime import timedelta
 user_bp = Blueprint('user_bp', __name__)
 db_match = DB_Matchs(keys.mongodb_link,"Matchs","game")
 db_user = DB_Users(keys.mongodb_link,'Matchs','user')
-
+db_visitor = DB_Visitor(keys.mongodb_link,'Matchs','visitor')
 
 
 # get user detail information if the user is login or using discord bot
@@ -30,7 +31,25 @@ def finduser():
 
 
 
-@user_bp.route('/user/login',methods=['GET'])
+@user_bp.route('/user/visitor',methods=['POST'])
+def visitor():
+    data = request.json
+    db_visitor.insert_visitor(data)
+    visitor_count = db_visitor.get_visitor_count()
+    user_count = db_user.get_user_count()
+    match_count = db_match.get_match_count()
+    payload = {
+        "visitor_count":visitor_count,
+        "user_count":user_count,
+        "match_count":match_count,
+        "bot_count":user_count,
+    }
+    
+    return jsonify({"data":payload})
+
+
+
+# @user_bp.route('/user/login',methods=['GET'])
 
 
 

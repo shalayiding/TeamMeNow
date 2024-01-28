@@ -23,13 +23,14 @@ class DB_Matchs:
         
     #insert the match into the specific game 
     def insert_match(self,host_name,host_id,game_name,game_mode,max_player,current_player,player_count,description,avatar_uri,expire_time):  
+        
        
         timestamp = datetime.now().strftime("%Y/%m/%d/%H:%M:%S")
         try :
             data = {'host_name':host_name,
                     'host_id':host_id,
-                    'game_name':game_name,
-                    'game_mode':game_mode,
+                    'game_name':game_name.lower(),
+                    'game_mode':game_mode.lower(),
                     'max_player':max_player,
                     'current_player':current_player,
                     "player_count":player_count,
@@ -43,6 +44,7 @@ class DB_Matchs:
                 
     def list_all_available_match_with_condition(self,game_name, game_mode):
         # query = {"$expr": {"$lt": ["$current_player", "$max_player"]}}
+        
         query = {}
         if game_mode and game_mode:
             query['game_name'] = game_name
@@ -82,7 +84,8 @@ class DB_Matchs:
         
         return list_of_matchs
 
-
+    def get_match_count(self):
+        return self.collection.count_documents({})
 
 
 

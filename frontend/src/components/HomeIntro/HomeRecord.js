@@ -1,10 +1,40 @@
 
-import React from 'react';
+import React,{ useEffect, useState } from 'react';
 
 
 function HomeRecord() {
+  const [serverResponse, setServerResponse] = useState(null);
 
+  function getUserInfo() {
+    const userInfo = {
+      device: navigator.userAgent,
+      referrer: document.referrer,
+      screenResolution: `${window.screen.width}x${window.screen.height}`,
+      language: navigator.language,
+    };
 
+    return userInfo;
+  }
+
+  function sendDataToServer(data) {
+    fetch('http://localhost:5000/v1/user/visitor', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data => {console.log('Success:', data);
+                  setServerResponse(data);})
+    .catch((error) => console.error('Error:', error));
+  }
+
+  useEffect(() => {
+    const userInfo = getUserInfo();
+    sendDataToServer(userInfo);
+  }, []);
+  
 
   return (
     <div className = "mb-20 rounded text-content-base"> 
@@ -23,19 +53,19 @@ function HomeRecord() {
       <dl className="grid max-w-2xl grid-cols-1 mx-auto mt-16 text-white gap-x-8 gap-y-10 sm:mt-20 sm:grid-cols-2 sm:gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-4">
         <div className="flex flex-col pl-6 border-l gap-y-3 border-white/10">
           <dt className="text-sm leading-6">TeamUp User</dt>
-          <dd className="order-first text-3xl font-semibold tracking-tight">14</dd>
+          <dd className="order-first text-3xl font-semibold tracking-tight">{serverResponse && serverResponse.data && serverResponse.data.user_count}</dd>
         </div>
         <div className="flex flex-col pl-6 border-l gap-y-3 border-white/10">
           <dt className="text-sm leading-6">Total Match</dt>
-          <dd className="order-first text-3xl font-semibold tracking-tight">324</dd>
+          <dd className="order-first text-3xl font-semibold tracking-tight">{serverResponse && serverResponse.data && serverResponse.data.match_count}</dd>
         </div>
         <div className="flex flex-col pl-6 border-l gap-y-3 border-white/10">
           <dt className="text-sm leading-6">Website Visit</dt>
-          <dd className="order-first text-3xl font-semibold tracking-tight">1134</dd>
+          <dd className="order-first text-3xl font-semibold tracking-tight">{serverResponse && serverResponse.data && serverResponse.data.visitor_count}</dd>
         </div>
         <div className="flex flex-col pl-6 border-l gap-y-3 border-white/10">
           <dt className="text-sm leading-6">Discord Link</dt>
-          <dd className="order-first text-3xl font-semibold tracking-tight">12</dd>
+          <dd className="order-first text-3xl font-semibold tracking-tight">{serverResponse && serverResponse.data && serverResponse.data.bot_count}</dd>
         </div>
       </dl>
     </div>
