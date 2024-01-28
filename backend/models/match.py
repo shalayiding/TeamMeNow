@@ -47,12 +47,12 @@ class DB_Matchs:
         
         query = {}
         if game_mode and game_mode:
-            query['game_name'] = game_name
-            query['game_mode'] = game_mode
+            query['game_name'] = game_name.lower()
+            query['game_mode'] = game_mode.lower()
         elif game_mode:
-            query['game_mode'] = game_mode
+            query['game_mode'] = game_mode.lower()
         elif game_name:
-            query['game_name'] = game_name
+            query['game_name'] = game_name.lower()
         try:
             # Find and return the available matches
             available_matches = self.collection.find(query)
