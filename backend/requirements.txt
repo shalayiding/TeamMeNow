@@ -1,0 +1,8 @@
+Flask
+Flask-Cors
+Flask-JWT-Extended
+python-dotenv
+discord.py
+aiohttp
+requests
+pymongo
