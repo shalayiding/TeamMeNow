@@ -1,7 +1,7 @@
 
 import React from 'react';
 import logo from "../Header/Images/new_logo.png"
-
+import appScreenShot from "./Images/home_intro.png"
 function HomeIntro() {
 
 
@@ -46,7 +46,7 @@ function HomeIntro() {
     </div>
     <div className="flex max-w-2xl mx-auto mt-16 sm:mt-24 lg:ml-10 lg:mr-0 lg:mt-0 lg:max-w-none lg:flex-none xl:ml-32">
       <div className="flex-none max-w-3xl sm:max-w-5xl lg:max-w-none">
-        <img src="" alt="App screenshot" width="2432" height="1442" className="w-[76rem] rounded-md bg-white/5 shadow-2xl ring-1 ring-white/10" />
+        <img src={appScreenShot} alt="App screenshot" className="w-[36rem] rounded-md bg-white/5 shadow-2xl ring-1 ring-white/10" />
       </div>
     </div>
   </div>

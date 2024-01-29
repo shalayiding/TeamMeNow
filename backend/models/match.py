@@ -2,6 +2,8 @@
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from datetime import datetime,timedelta
+from bson import ObjectId
+
 
 # all the operation related to the match will be here 
 class DB_Matchs:
@@ -23,7 +25,6 @@ class DB_Matchs:
         
     #insert the match into the specific game 
     def insert_match(self,host_name,host_id,game_name,game_mode,max_player,current_player,player_count,description,avatar_uri,expire_time):  
-        
        
         timestamp = datetime.now().strftime("%Y/%m/%d/%H:%M:%S")
         try :
@@ -65,7 +66,7 @@ class DB_Matchs:
     def list_all_supported_game(self):
         return self.db.list_collection_names();
  
-            
+    
     def list_all_available_match(self,maxoutput):
         list_of_matchs = []
         total_added = 0
@@ -87,5 +88,7 @@ class DB_Matchs:
     def get_match_count(self):
         return self.collection.count_documents({})
 
-
+    def find_match_with_id(self,id):
+        object_id = ObjectId(id)
+        return self.collection.find_one({"_id":object_id})
 
