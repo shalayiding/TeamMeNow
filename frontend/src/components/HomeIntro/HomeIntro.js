@@ -29,7 +29,7 @@ function HomeIntro() {
     <div className="flex-shrink-0 max-w-2xl mx-auto lg:mx-0 lg:max-w-xl lg:pt-8">
       <img className="h-11" src={logo} alt="TeamUpLogo" />
       <div className="mt-24 sm:mt-32 lg:mt-16">
-        <a className="inline-flex space-x-6" href="#">
+        <a className="inline-flex space-x-6" href="/">
           <span className="px-3 py-1 text-sm font-semibold leading-6 text-indigo-400 rounded-full bg-indigo-500/10 ring-1 ring-inset ring-indigo-500/20">What's new</span>
           <span className="inline-flex items-center space-x-2 text-sm font-medium leading-6 text-gray-300">
             <span>AI mathcing feature</span>
@@ -40,8 +40,8 @@ function HomeIntro() {
       <h1 className="mt-10 text-4xl font-bold tracking-tight text-white sm:text-6xl">Team Me Up</h1>
       <p className="mt-6 text-lg leading-8 text-gray-300">Find Your Perfect Match on TemmeUp: Connect, Play, and Conquer Together!</p>
       <div className="flex items-center mt-10 gap-x-6">
-        <a className="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400" href="/poe/stash-view?league=Affliction">Get started</a>
-        <a className="text-sm font-semibold leading-6 text-white" href="/#">Learn more <span aria-hidden="true">→</span></a>
+        <a className="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400" href="/match">Get started</a>
+        <a className="text-sm font-semibold leading-6 text-white" href="/match">Learn more <span aria-hidden="true">→</span></a>
       </div>
     </div>
     <div className="flex max-w-2xl mx-auto mt-16 sm:mt-24 lg:ml-10 lg:mr-0 lg:mt-0 lg:max-w-none lg:flex-none xl:ml-32">
