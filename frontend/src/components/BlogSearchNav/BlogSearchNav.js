@@ -10,7 +10,7 @@ function BlogSearchNav({fetchGameData}) {
 
   const GameNameSelect = {
     items:[{ label: "League of Legends", value: "League of Legends" },
-    { label: "Apex", value: "Apex"},{label: "Valorent", value: "Valorent" },{label: "Other", value: "Other" }],
+    { label: "Apex Legends", value: "Apex Legends"},{label: "Valorant", value: "Valorant" },{label: "Other", value: "Other" }],
     label:"Game Name",
     placeholder:"All"
   }
