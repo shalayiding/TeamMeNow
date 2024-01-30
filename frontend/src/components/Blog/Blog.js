@@ -8,7 +8,7 @@ function Blog() {
 
   const fetchGameData = (MatchQuery) => {
     fetch(
-      `http://localhost:5000/v1/matchs?gamename=${MatchQuery.gamename}&${MatchQuery.gamemode}&${MatchQuery.teamsize}`
+      `/v1/matchs?gamename=${MatchQuery.gamename}&${MatchQuery.gamemode}&${MatchQuery.teamsize}`
     )
       .then((response) => response.json())
       .then((data) => {

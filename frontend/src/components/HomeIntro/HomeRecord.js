@@ -17,7 +17,7 @@ function HomeRecord() {
   }
 
   function sendDataToServer(data) {
-    fetch('http://localhost:5000/v1/user/visitor', {
+    fetch('/v1/user/visitor', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

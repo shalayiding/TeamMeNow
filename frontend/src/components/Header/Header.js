@@ -21,7 +21,7 @@ function Header() {
   const isUserDataValid = !!userDataDetail && !!userDataDetail.data;
 
   const fetchUserData = () => {
-    fetch(`http://localhost:5000/v1/user/me`,{
+    fetch(`/v1/user/me`,{
       method: 'GET',
       credentials: 'include',
     })
