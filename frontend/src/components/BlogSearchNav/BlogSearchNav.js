@@ -2,8 +2,12 @@ import React,{useState} from "react";
 import SearchTag from "./SearchTag/SearchTag";
 import {
   Link,
-  Button
+  Button,
+  Textarea
 } from "@nextui-org/react";
+
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure,Input} from "@nextui-org/react";
+
 
 
 function BlogSearchNav({fetchGameData}) {
@@ -35,6 +39,9 @@ function BlogSearchNav({fetchGameData}) {
     fetchGameData({ gamename: GameName, gamemode: GameMode, teamsize: TeamSize });
   };
 
+  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+
+
   return (
     <div className="flex items-center justify-center pt-10 pl-10 space-x-4">
     <SearchTag SearchTagData={GameNameSelect} onChange = {getGameName}/> 
@@ -44,7 +51,52 @@ function BlogSearchNav({fetchGameData}) {
     <Button as={Link} color="warning" href="#" onClick={handleFindMatchClick}>
       Find Match
     </Button>
-    
+    <Button as={Link} color = "warning" href="#" onPress={onOpen}>
+      Create Match
+    </Button>
+    <Modal isOpen={isOpen} onOpenChange={onOpenChange} >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">Create Match</ModalHeader>
+              
+              <ModalBody>
+              <Input isRequired type="email" variant="bordered" label="Email" />
+              <Input isRequired type="email" variant="bordered" label="Email" />
+              
+              <Textarea
+                isRequired
+                label="Description"
+                variant="bordered"
+                placeholder="Enter your description"
+                disableAnimation
+                disableAutosize
+                classNames={{
+                  base: "max-w-xs",
+                  input: "resize-y min-h-[40px]",
+                }}
+              />
+
+
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onClose}>
+                  Close
+                </Button>
+                <Button color="primary" onPress={onClose}>
+                  Create
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+
+
+
+
+
+
     </div>
     
 
