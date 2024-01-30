@@ -20,9 +20,9 @@ def find_game():
     match_id = request.args.get('match_id')
     condition = {}
     if gamename :
-        condition['gamename'] = gamename
+        condition['gamename'] = gamename.lower()
     if gamemode :
-        condition['gamemode'] = gamemode
+        condition['gamemode'] = gamemode.lower()
     if match_id :
         condition['_id'] = ObjectId(match_id)
 
