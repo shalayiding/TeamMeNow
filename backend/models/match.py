@@ -43,20 +43,11 @@ class DB_Matchs:
         except Exception as e :
             print(f"An error occurred: {e}")
                 
-    def list_all_available_match_with_condition(self,game_name, game_mode):
-        # query = {"$expr": {"$lt": ["$current_player", "$max_player"]}}
-        
-        query = {}
-        if game_mode and game_mode:
-            query['game_name'] = game_name.lower()
-            query['game_mode'] = game_mode.lower()
-        elif game_mode:
-            query['game_mode'] = game_mode.lower()
-        elif game_name:
-            query['game_name'] = game_name.lower()
+    # find match base on the condition
+    def find_match(self,condition):
         try:
             # Find and return the available matches
-            available_matches = self.collection.find(query)
+            available_matches = self.collection.find(condition)
             return available_matches
         except Exception as e:
             print(f"An error occurred while fetching available matches: {e}")
@@ -65,25 +56,7 @@ class DB_Matchs:
     #return list of the aviable game collection
     def list_all_supported_game(self):
         return self.db.list_collection_names();
- 
-    
-    def list_all_available_match(self,maxoutput):
-        list_of_matchs = []
-        total_added = 0
-        query = {
-        "current_person": {"$lt": "$max_person"},
-        "create_time": {"$gt": (datetime.now() - timedelta(hours=24)).strftime("%Y/%m/%d %H:%M:%S")}
-        }
-        matches = self.collection.find(query)
-        
-        for m in matches:
-            if total_added < maxoutput:
-                list_of_matchs.append(m)
-                total_added += 1
-            else:
-                break
-        
-        return list_of_matchs
+
 
     def get_match_count(self):
         return self.collection.count_documents({})

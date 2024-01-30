@@ -3,7 +3,7 @@ from models.match import DB_Matchs
 from models.users import DB_Users
 import config as keys
 from bson import json_util
-
+from bson.objectid import ObjectId
 
 # setting blueprint and mongodb properties
 match_bp = Blueprint('match_bp', __name__)
@@ -17,14 +17,23 @@ db_user = DB_Users(keys.mongodb_link,'Matchs','user')
 def find_game():
     gamename = request.args.get('gamename')
     gamemode = request.args.get('gamemode')
+    match_id = request.args.get('match_id')
+    condition = {}
+    if gamename :
+        condition['gamename'] = gamename
+    if gamemode :
+        condition['gamemode'] = gamemode
+    if match_id :
+        condition['_id'] = ObjectId(match_id)
+
     try:
-        found_matches = db_match.list_all_available_match_with_condition(gamename,gamemode)
+        found_matches = db_match.find_match(condition)
         matches_json = json_util.dumps(found_matches)
         return jsonify({"status":"success","matches":matches_json}), 200
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
     
-    
+
 # create new match into the database
 @match_bp.route('/matchs',methods= ['POST'])
 def create_match():

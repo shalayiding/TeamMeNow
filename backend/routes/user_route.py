@@ -6,6 +6,8 @@ from models.visitor import DB_Visitor
 import config as keys
 from flask_jwt_extended import create_access_token,jwt_required, get_jwt_identity
 from datetime import timedelta
+from bson.objectid import ObjectId
+
 
 # setting blueprint and mongodb properties
 user_bp = Blueprint('user_bp', __name__)
