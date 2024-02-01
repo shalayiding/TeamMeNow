@@ -15,7 +15,7 @@ function MatchCard({gameData}) {
       <CardHeader className="flex-col items-start px-4 pt-2 pb-4">
         
         <div className="flex items-center mb-2">
-          <Avatar src={gameData.game_uri} />
+          
           <p className="ml-2 text-lg font-bold uppercase">{gameData.game_name}</p>
         </div>
         <small className="text-default-500">Current Looking for {gameData.player_count} Player</small>

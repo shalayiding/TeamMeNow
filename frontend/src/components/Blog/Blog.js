@@ -5,10 +5,10 @@ import BlogSearchNav from "../BlogSearchNav/BlogSearchNav";
 function Blog() {
   const [gameDataDetail, getGameData] = useState(null);
   const isGameDataArray = gameDataDetail && gameDataDetail.status === "success";
-
+  const apiBaseUrl = process.env.REACT_APP_BACKEND_API_URL;
   const fetchGameData = (MatchQuery) => {
     fetch(
-      `/v1/matchs?gamename=${MatchQuery.gamename}&${MatchQuery.gamemode}&${MatchQuery.teamsize}`
+      `${apiBaseUrl}/v1/matchs?gamename=${MatchQuery.gamename}&${MatchQuery.gamemode}&${MatchQuery.teamsize}`
     )
       .then((response) => response.json())
       .then((data) => {

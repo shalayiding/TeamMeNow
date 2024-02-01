@@ -12,26 +12,25 @@ import {
   Link,
   Image,
 } from "@nextui-org/react";
-
+import axios from "axios";
 
 
 function Header() {
 
   const [userDataDetail,setUserDataDetail] = useState(null)
   const isUserDataValid = !!userDataDetail && !!userDataDetail.data;
-
+  const apiBaseUrl = process.env.REACT_APP_BACKEND_API_URL;
   const fetchUserData = () => {
-    fetch(`/v1/user/me`,{
-      method: 'GET',
-      credentials: 'include',
+    axios.get(`${apiBaseUrl}/v1/user/me`, {
+      withCredentials: true
     })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        setUserDataDetail(data);
-      })
-      .catch(error => console.error('Error fetching data:', error));
+    .then(response => {
+      console.log(response.data);
+      setUserDataDetail(response.data);
+    })
+    .catch(error => console.error('Error fetching data:', error));
   };
+  
   useEffect(() => {
     fetchUserData();
   }, []);
