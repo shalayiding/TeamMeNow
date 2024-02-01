@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from "react";
+import React,{useState,useEffect,useCallback } from "react";
 import logo from "./Images/new_logo.png";
 import home from "./Images/home.png";
 import match from "./Images/match.png";
@@ -20,20 +20,19 @@ function Header() {
   const [userDataDetail,setUserDataDetail] = useState(null)
   const isUserDataValid = !!userDataDetail && !!userDataDetail.data;
   const apiBaseUrl = process.env.REACT_APP_BACKEND_API_URL;
-  const fetchUserData = () => {
-    axios.get(`${apiBaseUrl}/v1/user/me`, {
-      withCredentials: true
-    })
-    .then(response => {
-      console.log(response.data);
-      setUserDataDetail(response.data);
-    })
-    .catch(error => console.error('Error fetching data:', error));
-  };
-  
+  const fetchUserData = useCallback(() => {
+    axios.get(`${apiBaseUrl}/v1/user/me`, { withCredentials: true })
+      .then(response => {
+        console.log(response.data);
+        setUserDataDetail(response.data);
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  }, [apiBaseUrl]); // Assuming apiBaseUrl is stable, it's used as a dependency
+
   useEffect(() => {
     fetchUserData();
-  }, []);
+  }, [fetchUserData]); // Now fetchUserData is a dependency
+
 
   
   return (
