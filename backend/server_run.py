@@ -3,6 +3,7 @@ from services.discord_oauth2 import DCoauth
 from flask_cors import CORS  # Import CORS
 import config as keys
 from flask_jwt_extended import JWTManager
+from services.league_rank import Rank
 
 
 # getting the blueprint for user and match route
@@ -32,6 +33,18 @@ def unlink_discord():
     session.pop('user_id',None)
     session.pop('user_info',None)
     return redirect(url_for('home'))
+
+@app.route('/get_summoner_rank', methods=['GET'])
+def get_summoner_rank():
+    summoner_name = request.args.get('summoner_name')
+    region = request.args.get('region', default='NA1')
+    
+    if summoner_name:
+        rank = Rank()
+        rank_info = rank.get_summoner_rank_by_name(summoner_name, region)
+        return jsonify(rank_info)
+    else:
+        return jsonify({"error": "summoner_name is required"}), 400
 
 
 # main 
