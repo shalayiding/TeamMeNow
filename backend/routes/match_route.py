@@ -20,6 +20,8 @@ def find_game():
     gamename = request.args.get('gamename')
     gamemode = request.args.get('gamemode')
     match_id = request.args.get('match_id')
+    offset = request.args.get('offset',default=0)
+    limit = request.args.get('limit',default=10)    
     condition = {}
     if gamename :
         condition['gamename'] = gamename.lower()
@@ -27,9 +29,17 @@ def find_game():
         condition['gamemode'] = gamemode.lower()
     if match_id :
         condition['_id'] = ObjectId(match_id)
-
+    
+    try :
+        limit = int(limit)
+        offset = int(offset)
+    except ValueError:
+        limit = 10
+        offset = 0
+    
     try:
-        found_matches = db_match.find_match(condition)
+        limit = min(limit,20)
+        found_matches = db_match.find_match(condition,offset,limit)
         matches_json = json_util.dumps(found_matches)
         return jsonify({"status":"success","matches":matches_json}), 200
     except Exception as e:

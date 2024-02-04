@@ -44,11 +44,11 @@ class DB_Matchs:
             print(f"An error occurred: {e}")
                 
     # find match base on the condition
-    def find_match(self,condition):
+    def find_match(self,condition,offset,limit):
         try:
             # Find and return the available matches
             available_matches = self.collection.find(condition)
-            return available_matches
+            return available_matches.skip(offset).limit(limit)
         except Exception as e:
             print(f"An error occurred while fetching available matches: {e}")
             return None
