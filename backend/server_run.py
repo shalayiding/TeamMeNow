@@ -33,7 +33,6 @@ def unlink_discord():
     session.pop('user_info',None)
     return redirect(url_for('home'))
 
-
 # main 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=5001,debug=True)
