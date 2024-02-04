@@ -7,6 +7,7 @@ import config as keys
 from flask_jwt_extended import create_access_token,jwt_required, get_jwt_identity
 from datetime import timedelta
 from bson.objectid import ObjectId
+from services.league_rank import Rank
 
 
 # setting blueprint and mongodb properties
@@ -15,22 +16,26 @@ db_match = DB_Matchs(keys.mongodb_link,"Matchs","game")
 db_user = DB_Users(keys.mongodb_link,'Matchs','user')
 db_visitor = DB_Visitor(keys.mongodb_link,'Matchs','visitor')
 
-
 # get user detail information if the user is login or using discord bot
 @user_bp.route('/user/me',methods=['GET'])
 @jwt_required(locations=['cookies','headers'])
 def finduser():
     current_user = get_jwt_identity()
     user = db_user.find_user_by_id(current_user['_id'])
-    data = {"dc_id":user["dc_id"],
-            "dc_global_name":user["dc_global_name"],
-            "register_source":user["register_source"],
-            "dc_avatar_uri":user["dc_avatar_uri"],
-            "email":user["email"],
-            }
-    
-    return jsonify({"data":data})
-
+    try :
+        if user['loginStatus'] == "logedIn":
+                    
+            data = {"dc_id":user["dc_id"],
+                    "dc_global_name":user["dc_global_name"],
+                    "register_source":user["register_source"],
+                    "dc_avatar_uri":user["dc_avatar_uri"],
+                    "email":user["email"],
+                    }
+            return jsonify({"data":data})
+        else:
+            return jsonify({"msg":"Login before accesing your information"})
+    except Exception as e:
+        return jsonify({"msg":str(e)})
 
 
 @user_bp.route('/user/visitor',methods=['POST'])
@@ -50,7 +55,33 @@ def visitor():
     return jsonify({"data":payload})
 
 
+@user_bp.route('/user/logout',methods=['GET'])
+@jwt_required(locations=['cookies'])
+def logout():
+    current_user = get_jwt_identity()
+    user = db_user.find_user_by_id(current_user['_id'])
+    if user['loginStatus'] == 'logedIn':
+        db_user.set_user_logInOut(current_user['_id'],"logedOut")
+        return jsonify({"msg":"You are loged out"})
+    else:
+        return jsonify({"msg":"login before logout"})
+    
+    
+@user_bp.route('/user/rank', methods=['GET'])
+def get_summoner_rank():
+    summoner_name = request.args.get('name')
+    region = request.args.get('region', default='NA1')
 
+    rank = Rank()  
+    rank_info = rank.get_summoner_rank_by_name(summoner_name, region)
+    
+    if rank_info:
+        return jsonify(rank_info)
+    else:
+        return jsonify({"error": "Unable to fetch summoner rank"}), 400
+
+    
+    
 # @user_bp.route('/user/login',methods=['GET'])
 
 
@@ -116,7 +147,7 @@ def linkDiscord():
                 expires = timedelta(hours=3)
                 access_token = create_access_token(identity={"_id":found_user},expires_delta=expires)
                 response = make_response(redirect("http://localhost:3000/"))
-                
+                db_user.set_user_logInOut(found_user,"logedIn")
                 response.set_cookie("access_token_cookie", access_token, httponly=True)
                 return response   
             except Exception as e:

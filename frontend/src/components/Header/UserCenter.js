@@ -1,4 +1,5 @@
 import React from "react";
+import Cookies from 'js-cookie';
 
 import {
   NavbarContent,
@@ -9,9 +10,24 @@ import {
   Avatar,
   DropdownItem,
 } from "@nextui-org/react";
+import axios from "axios";
 
 function UserCenter({data}) {
   const userData = data.data;
+  // handle user logout 
+  const apiBaseUrl = process.env.REACT_APP_BACKEND_API_URL;
+  const handleLogout = ()=>{
+    axios.get(`${apiBaseUrl}/v1/user/logout`, { withCredentials: true })
+      .then(response => {
+        window.location.reload();
+      })
+      .catch(error => console.error('Error fetching data:', error));
+    
+  };
+
+
+
+
   return (
     <NavbarContent as="div" justify="end">
         
@@ -40,7 +56,7 @@ function UserCenter({data}) {
         <DropdownItem key="analytics">Analytics</DropdownItem>
         <DropdownItem key="system">System</DropdownItem>
         <DropdownItem key="configurations">Configurations</DropdownItem>
-        <DropdownItem key="logout" color="danger">
+        <DropdownItem key="logout" color="danger" onClick={handleLogout}>
           Log Out
         </DropdownItem>
       </DropdownMenu>

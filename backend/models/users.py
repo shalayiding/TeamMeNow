@@ -59,3 +59,20 @@ class DB_Users:
     
     def get_user_count(self):
         return self.collection.count_documents({})
+    
+    
+    def set_user_logInOut(self,user_id_str,user_status):
+        """
+            user_status (_type_): "logedIn or logedOut"
+        """
+        timestamp = datetime.now().strftime("%Y/%m/%d/%H:%M:%S")
+        try :
+            user_id = ObjectId(user_id_str)
+            print(user_id)
+            data = {"$set" : {"loginStatus":user_status, f"last{user_status}Time": timestamp}}
+            user_document = self.collection.update_one({"_id":user_id},data)
+            print(user_document.modified_count)
+        except Exception as e:
+            print("error inserting user status when they login")
+    
+    
