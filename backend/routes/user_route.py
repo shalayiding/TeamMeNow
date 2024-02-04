@@ -7,6 +7,7 @@ import config as keys
 from flask_jwt_extended import create_access_token,jwt_required, get_jwt_identity
 from datetime import timedelta
 from bson.objectid import ObjectId
+from services.league_rank import Rank
 
 
 # setting blueprint and mongodb properties
@@ -54,7 +55,6 @@ def visitor():
     return jsonify({"data":payload})
 
 
-
 @user_bp.route('/user/logout',methods=['GET'])
 @jwt_required(locations=['cookies'])
 def logout():
@@ -65,6 +65,21 @@ def logout():
         return jsonify({"msg":"You are loged out"})
     else:
         return jsonify({"msg":"login before logout"})
+    
+    
+@user_bp.route('/user/rank', methods=['GET'])
+def get_summoner_rank():
+    summoner_name = request.args.get('name')
+    region = request.args.get('region', default='NA1')
+
+    rank = Rank()  
+    rank_info = rank.get_summoner_rank_by_name(summoner_name, region)
+    
+    if rank_info:
+        return jsonify(rank_info)
+    else:
+        return jsonify({"error": "Unable to fetch summoner rank"}), 400
+
     
     
 # @user_bp.route('/user/login',methods=['GET'])
