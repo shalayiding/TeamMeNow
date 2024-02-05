@@ -65,3 +65,7 @@ class DB_Matchs:
         object_id = ObjectId(id)
         return self.collection.find_one({"_id":object_id})
 
+    def default_converter(self,obId):
+        if isinstance(obId, ObjectId):
+            return str(obId)  
+        return obId.__dict__

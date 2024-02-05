@@ -1,21 +1,50 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import MatchCard from "../MatchCard/MatchCard";
 import BlogSearchNav from "../BlogSearchNav/BlogSearchNav";
+import axios from 'axios';
+
+import { Pagination,Button } from "@nextui-org/react";
 
 function Blog() {
   const [gameDataDetail, getGameData] = useState(null);
-  const isGameDataArray = gameDataDetail && gameDataDetail.status === "success";
+  const matchCardInPage = 10;
+
   const apiBaseUrl = process.env.REACT_APP_BACKEND_API_URL;
+  
+  
   const fetchGameData = (MatchQuery) => {
-    fetch(
-      `${apiBaseUrl}/v1/matchs?gamename=${MatchQuery.gamename}&${MatchQuery.gamemode}&${MatchQuery.teamsize}`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        getGameData(data);
+    let queryParams = [];
+    if (MatchQuery && MatchQuery.gamename) {
+      queryParams.push(`gamename=${encodeURIComponent(MatchQuery.gamename)}`);
+    }
+    if (MatchQuery && MatchQuery.gamemode) {
+      queryParams.push(`gamemode=${encodeURIComponent(MatchQuery.gamemode)}`);
+    }
+    if (MatchQuery && MatchQuery.teamsize) {
+      queryParams.push(`teamsize=${encodeURIComponent(MatchQuery.teamsize)}`);
+    }
+    const queryString = queryParams.join('&');
+    axios.get(`${apiBaseUrl}/v1/matchs?${queryString}`)
+      .then(response => {
+  
+        getGameData(response.data);
       })
-      .catch((error) => console.error("Error fetching data:", error));
+      .catch(error => console.error("Error fetching data:", error));
   };
+
+  // fetchGamedata when the compoennt is render
+  useEffect(() => {
+    fetchGameData({});
+  }, []); // 
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    // You can also perform other actions here, such as fetching data for the new page
+    console.log("Current Page is:", page);
+    console.log(gameDataDetail);
+  };
+
 
   return (
     <div className="">
@@ -23,7 +52,7 @@ function Blog() {
         <svg
           className="absolute inset-0 w-full h-full -z-10 stroke-white/10 "
           aria-hidden="true"
-          maskImage="radial-gradient(100% 100% at top right, white, transparent)"
+          maskimage="radial-gradient(100% 100% at top right, white, transparent)"
         >
           <defs>
             <pattern
@@ -63,11 +92,44 @@ function Blog() {
           ></div>
         </div>
 
-        <div className="gap-5 pt-20 pb-20">
+        <div className="gap-5 pt-8 pb-10">
+
           <BlogSearchNav fetchGameData={fetchGameData} />
+          <div className="flex justify-center gap-5 pt-10">
+          <div className="flex gap-2">
+              <Button
+                size="lg"
+                variant="flat"
+                color="warning"
+                onPress={() => setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev))}
+              >
+                Previous
+              </Button>
+              
+            <Pagination
+              total={10}
+              color="secondary"
+              size="lg"
+              page={currentPage}
+              onChange={setCurrentPage}
+            />
+            
+              <Button
+                size="lg"
+                variant="flat"
+                color="warning"
+                onPress={() => setCurrentPage((prev) => (prev < 10 ? prev + 1 : prev))}
+              >
+                Next
+              </Button>
+            </div>
+          </div>
+          
+          
           <div className="flex flex-wrap justify-center gap-5 pt-20 pb-20">
-            {isGameDataArray &&
-              JSON.parse(gameDataDetail.matches).map((singleGameData) => (
+            
+            {gameDataDetail &&
+              gameDataDetail.matches.map((singleGameData) => (
                 <MatchCard
                   gameData={singleGameData}
                   key={singleGameData._id.$oid}

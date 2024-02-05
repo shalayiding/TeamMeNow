@@ -5,6 +5,7 @@ import config as keys
 from bson import json_util
 from bson.objectid import ObjectId
 from flask_cors import cross_origin
+import json
 
 
 # setting blueprint and mongodb properties
@@ -19,6 +20,7 @@ db_user = DB_Users(keys.mongodb_link,'Matchs','user')
 def find_game():
     gamename = request.args.get('gamename')
     gamemode = request.args.get('gamemode')
+    teamsize = request.args.get('teamsize')
     match_id = request.args.get('match_id')
     offset = request.args.get('offset',default=0)
     limit = request.args.get('limit',default=10)    
@@ -29,7 +31,9 @@ def find_game():
         condition['gamemode'] = gamemode.lower()
     if match_id :
         condition['_id'] = ObjectId(match_id)
-    
+    if teamsize:
+        condition['player_count'] = int(teamsize)
+        
     try :
         limit = int(limit)
         offset = int(offset)
@@ -40,21 +44,17 @@ def find_game():
     try:
         limit = min(limit,20)
         found_matches = db_match.find_match(condition,offset,limit)
-        matches_json = json_util.dumps(found_matches)
-        return jsonify({"status":"success","matches":matches_json}), 200
+        matches_json = json_util.dumps(found_matches,default = db_match.default_converter)
+        matches_dict = json.loads(matches_json)
+        return jsonify({"matches":matches_dict}), 200
     except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+        return jsonify({"msg": str(e)}), 400
     
 
 # create new match into the database
 @match_bp.route('/matchs',methods= ['POST'])
 def create_match():
     data = request.json
-    # required_fields = ['host_name', 'host_id', 'game_name', 'game_mode', 'max_player', 'current_player','player_count', 'description','avatar_uri','expire_time']
-    # if not all(field in data for field in required_fields):
-    #     missing = [field for field in required_fields if field not in data]
-    #     return jsonify({"status": "error", "message": f"Missing fields: {', '.join(missing)}"}), 400
-    
     try:
         db_match.insert_match(data.get('host_name'), data.get('host_id'), data.get('game_name'),
                               data.get('game_mode'), data.get('max_player'), 
@@ -63,4 +63,4 @@ def create_match():
         
         return jsonify({"status": "success", "message": f"inserted data {data}"}), 200
     except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+        return jsonify({"status": "error", "message": str(e)}), 400
