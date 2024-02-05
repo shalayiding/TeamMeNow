@@ -55,6 +55,38 @@ def visitor():
     return jsonify({"data":payload})
 
 
+@user_bp.route('/user/game_info',methods=['POST'])
+@jwt_required(locations=['cookies','headers'])
+def game_info():
+    data = request.json
+    current_user = get_jwt_identity()
+    user_id = current_user['_id'] 
+
+    game_name = data.get('game_name')
+    name = data.get('name')
+    region = data.get('region')
+
+    rank_instance = Rank()
+    rank_response = rank_instance.get_summoner_rank_by_name(name, region)
+
+    if 'data' in rank_response:
+        rank_info = rank_response['data']
+        rank = rank_info['rank']
+        tier = rank_info['tier']
+        point = rank_info['leaguePoints']
+        puuid = rank_info['puuid']
+        level = rank_info['level']
+        modified_count = db_user.insert_game_info(user_id,game_name,name,level,tier,rank,point,puuid)
+        
+        if modified_count:
+            return jsonify({"msg": "Game info updated successfully"}), 200
+        else:
+            return jsonify({"msg": "Failed to update game info"}), 500
+    else:
+        return jsonify({"msg": rank_response.get('msg', 'Failed to fetch rank info')}), 400
+
+
+
 @user_bp.route('/user/logout',methods=['GET'])
 @jwt_required(locations=['cookies'])
 def logout():

@@ -23,7 +23,7 @@ class DB_Users:
         query = {}
         if discord_id:
             query['dc_id'] = discord_id
-        if email:
+        if email:   
             query['email'] = email
         result = self.collection.find_one(query)
         if result:
@@ -74,5 +74,27 @@ class DB_Users:
             print(user_document.modified_count)
         except Exception as e:
             print("error inserting user status when they login")
+
+    def insert_game_info(self,user_id_str,game_name,name,level,tier,rank,point,puuid):
+        user_id = ObjectId(user_id_str)
+        rank_tier = f"{tier} {rank}"
+        update_data = {
+            "$set": {
+                f"games.{game_name}": { 
+                    "ign": name,
+                    "level": level,
+                    "rank": rank_tier,
+                    "point": point,
+                    "puuid": puuid
+                }
+            }
+        }
+        result = self.collection.update_one(
+            {"_id": user_id}, 
+            update_data 
+        )
+        return result.modified_count
+
+
     
     
