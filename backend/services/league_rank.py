@@ -38,14 +38,15 @@ class Rank:
                     }
                     return {'data' : rank_info}
                 else:
-                    return {'msg':"No rank data found for the summoner."}
+                    return {'msg':"No data(rank) found for the summoner."}
             else:
                 return f"Error fetching rank info: HTTP {response.status_code}"
 
         except requests.exceptions.RequestException as e:
             return f"Request failed: {e}"
 
-        
+
+
 # test purpose
 
 # if __name__ == "__main__":
