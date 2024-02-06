@@ -44,7 +44,7 @@ def visitor():
     db_visitor.insert_visitor(data)
     visitor_count = db_visitor.get_visitor_count()
     user_count = db_user.get_user_count() + 8
-    match_count = db_match.get_match_count()
+    match_count = db_match.get_match_count({})
     payload = {
         "visitor_count":visitor_count,
         "user_count":user_count,

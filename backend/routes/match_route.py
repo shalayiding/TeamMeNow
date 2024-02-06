@@ -43,10 +43,12 @@ def find_game():
     
     try:
         limit = min(limit,20)
+        size_found_matchs = db_match.get_match_count(condition)
         found_matches = db_match.find_match(condition,offset,limit)
         matches_json = json_util.dumps(found_matches,default = db_match.default_converter)
         matches_dict = json.loads(matches_json)
-        return jsonify({"matches":matches_dict}), 200
+        totalPage = max(1,size_found_matchs // limit)
+        return jsonify({"matches":matches_dict,"totalPage":totalPage}), 200
     except Exception as e:
         return jsonify({"msg": str(e)}), 400
     

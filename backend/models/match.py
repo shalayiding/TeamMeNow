@@ -47,8 +47,8 @@ class DB_Matchs:
     def find_match(self,condition,offset,limit):
         try:
             # Find and return the available matches
-            available_matches = self.collection.find(condition)
-            return available_matches.skip(offset).limit(limit)
+            available_matchs = self.collection.find(condition)
+            return available_matchs.skip(offset).limit(limit)
         except Exception as e:
             print(f"An error occurred while fetching available matches: {e}")
             return None
@@ -58,8 +58,8 @@ class DB_Matchs:
         return self.db.list_collection_names();
 
 
-    def get_match_count(self):
-        return self.collection.count_documents({})
+    def get_match_count(self,query):
+        return self.collection.count_documents(query)
 
     def find_match_with_id(self,id):
         object_id = ObjectId(id)
