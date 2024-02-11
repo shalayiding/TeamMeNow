@@ -39,12 +39,12 @@ function MatchCard({gameData}) {
         />
         <div className="flex items-center justify-between w-full mt-5">
           {" "}
-          <Button className="max-w-[50px] p-[2px]" size="md">
+          <a href={gameData.discord_link}>
+            <Button className="max-w-[50px] p-[2px]" size="md" >
             Join
           </Button>
-          <div className="flex items-center">
-            <span>{gameData.current_player}/{gameData.max_player}</span>
-          </div>
+          </a>
+          
         </div>
       </CardBody>
     </Card>

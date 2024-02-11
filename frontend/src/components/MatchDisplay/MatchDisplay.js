@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from "react";
+import { React, useState, useEffect,useCallback} from "react";
 import MatchCard from "../MatchCard/MatchCard";
 import MatchSearchForm from "./MatchSearch/MatchSearchForm";
 import MatchPagination from "./MatchSearch/MatchPagination";
@@ -18,16 +18,16 @@ function MatchDisplay() {
   const apiBaseUrl = process.env.REACT_APP_BACKEND_API_URL;
   const MaxItem = 10;
 
-  const fetchGameData = (MatchQuery) => {
+  const fetchGameData = useCallback(() => {
     let queryParams = [];
-    if (MatchQuery && MatchQuery.gamename) {
-      queryParams.push(`gamename=${encodeURIComponent(MatchQuery.gamename)}`);
+    if (matchSearchQuery && matchSearchQuery.gamename) {
+      queryParams.push(`gamename=${encodeURIComponent(matchSearchQuery.gamename)}`);
     }
-    if (MatchQuery && MatchQuery.gamemode) {
-      queryParams.push(`gamemode=${encodeURIComponent(MatchQuery.gamemode)}`);
+    if (matchSearchQuery && matchSearchQuery.gamemode) {
+      queryParams.push(`gamemode=${encodeURIComponent(matchSearchQuery.gamemode)}`);
     }
-    if (MatchQuery && MatchQuery.teamsize) {
-      queryParams.push(`teamsize=${encodeURIComponent(MatchQuery.teamsize)}`);
+    if (matchSearchQuery && matchSearchQuery.teamsize) {
+      queryParams.push(`teamsize=${encodeURIComponent(matchSearchQuery.teamsize)}`);
     }
     queryParams.push(`offset=${encodeURIComponent((currentPage-1)*MaxItem)}`)
     queryParams.push(`limit=${encodeURIComponent(MaxItem)}`)
@@ -42,12 +42,12 @@ function MatchDisplay() {
       })
       .catch((error) => console.error("Error fetching data:", error));
       
-  };
+  },[currentPage, matchSearchQuery, apiBaseUrl]);
 
   // fetchGamedata when the compoennt is render
   useEffect(() => {
     fetchGameData(matchSearchQuery);
-  }, [currentPage,matchSearchQuery]); //
+  }, [fetchGameData, matchSearchQuery]); //
 
   return (
     <div className="relative min-h-screen pb-16 overflow-hidden isolate bg-surface-primary">
