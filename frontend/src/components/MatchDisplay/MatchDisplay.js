@@ -8,7 +8,7 @@ import axios from "axios";
 function MatchDisplay() {
   // set the current page for the match pagination defualt value 1
   const [currentPage, setCurrentPage] = useState(1);
-  const [TotalPage,setTotalPage] = useState(10)
+  const [TotalPage,setTotalPage] = useState(1);
   //extract all the data of the maching card
   const [gameDataDetail, getGameData] = useState(null);
 
@@ -38,7 +38,7 @@ function MatchDisplay() {
       .then((response) => {
         getGameData(response.data);
         setTotalPage(response.data.totalPage);
-        console.log(response.data);
+        
       })
       .catch((error) => console.error("Error fetching data:", error));
       

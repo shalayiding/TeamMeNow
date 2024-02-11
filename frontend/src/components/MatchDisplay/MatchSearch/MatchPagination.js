@@ -31,7 +31,7 @@ function MatchPagination({totalPage,currentPage,setCurrentPage}){
                 size="lg"
                 variant="flat"
                 color="warning"
-                onPress={() => setCurrentPage((prev) => (prev < 10 ? prev + 1 : prev))}
+                onPress={() => setCurrentPage((prev) => (prev < totalPage ? prev + 1 : prev))}
               >
                 Next
               </Button>

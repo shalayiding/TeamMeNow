@@ -1,15 +1,14 @@
 version: '3.8'
 
 services:
-
-  # back-end:
-  #   image: back-end:latest
-  #   ports:
-  #     - "5000:5000" 
-  #   env_file:
-  #     - ./backend/.env
-  #   volumes:
-  #     - ./backend:/app
+  back-end:
+    image: back-end:latest
+    ports:
+      - "5001:5001" 
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend:/app
 
   # bot:
   #   image: bot:latest
@@ -23,6 +22,8 @@ services:
   front-end:
     image: front-end:latest
     ports:
-      - "3000:3000" 
+      - "3000:3000"
+    env_file:
+      - ./frontend/.env 
     volumes:
       - ./frontend:/app
