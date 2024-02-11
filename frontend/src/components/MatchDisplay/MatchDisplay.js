@@ -95,7 +95,7 @@ function MatchDisplay() {
       </div>
 
       <div className="gap-5 pt-3 pb-10">
-        <MatchSearchForm setmatchSearchQuery = { setmatchSearchQuery} />
+        <MatchSearchForm setmatchSearchQuery = { setmatchSearchQuery} setCurrentPage={setCurrentPage}/>
 
         <div className="flex flex-wrap justify-center gap-5 pt-10 pb-20 pl-7 pr-7">
           {gameDataDetail &&

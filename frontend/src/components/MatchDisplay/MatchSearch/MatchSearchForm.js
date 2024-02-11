@@ -35,7 +35,7 @@ const TeamSizeSelect = {
 
 
 
-function BlogSearchNav({ setmatchSearchQuery}) {
+function MatchSearchForm({ setmatchSearchQuery , setCurrentPage}) {
 
 
   const [GameName, getGameName] = useState("");
@@ -47,6 +47,7 @@ function BlogSearchNav({ setmatchSearchQuery}) {
       gamemode: GameMode,
       teamsize: TeamSize,
     });
+    setCurrentPage(1);
   };
 
 
@@ -64,4 +65,4 @@ function BlogSearchNav({ setmatchSearchQuery}) {
   );
 }
 
-export default BlogSearchNav;
+export default MatchSearchForm;
