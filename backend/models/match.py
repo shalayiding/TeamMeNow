@@ -24,7 +24,7 @@ class DB_Matchs:
     
         
     #insert the match into the specific game 
-    def insert_match(self,host_name,host_id,game_name,game_mode,max_player,current_player,player_count,description,avatar_uri,expire_time):  
+    def insert_match(self,host_name,host_id,game_name,game_mode,player_count,description,avatar_uri,expire_time,discord_join_link):  
        
         timestamp = datetime.now().strftime("%Y/%m/%d/%H:%M:%S")
         try :
@@ -32,13 +32,12 @@ class DB_Matchs:
                     'host_id':host_id,
                     'game_name':game_name.lower(),
                     'game_mode':game_mode.lower(),
-                    'max_player':max_player,
-                    'current_player':current_player,
                     "player_count":player_count,
                     'description':description,
                     'avatar_uri':avatar_uri,
                     'expire_time':expire_time,
-                    'create_time' : timestamp}
+                    'create_time' : timestamp,
+                    'discord_join_link':discord_join_link}
             self.collection.insert_one(data)
         except Exception as e :
             print(f"An error occurred: {e}")

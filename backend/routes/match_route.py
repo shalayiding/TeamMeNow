@@ -59,9 +59,8 @@ def create_match():
     data = request.json
     try:
         db_match.insert_match(data.get('host_name'), data.get('host_id'), data.get('game_name'),
-                              data.get('game_mode'), data.get('max_player'), 
-                              data.get('current_player'),data.get('player_count'), data.get('description'),
-                              data.get('avatar_uri'),data.get('expire_time'))
+                              data.get('game_mode'), data.get('player_count'), data.get('description'),
+                              data.get('avatar_uri'),data.get('expire_time'),data.get('discord_join_link'))
         
         return jsonify({"status": "success", "message": f"inserted data {data}"}), 200
     except Exception as e:
