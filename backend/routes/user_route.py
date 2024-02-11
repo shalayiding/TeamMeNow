@@ -31,11 +31,11 @@ def finduser():
                     "dc_avatar_uri":user["dc_avatar_uri"],
                     "email":user["email"],
                     }
-            return jsonify({"data":data})
+            return jsonify({"data":data}),200
         else:
-            return jsonify({"msg":"Login before accesing your information"})
+            return jsonify({"msg":"Login before accesing your information"}),400
     except Exception as e:
-        return jsonify({"msg":str(e)})
+        return jsonify({"msg":str(e)}),404
 
 
 @user_bp.route('/user/visitor',methods=['POST'])
@@ -52,7 +52,7 @@ def visitor():
         "bot_count":user_count,
     }
     
-    return jsonify({"data":payload})
+    return jsonify({"data":payload}),200
 
 
 @user_bp.route('/user/game_info',methods=['POST'])
@@ -94,9 +94,9 @@ def logout():
     user = db_user.find_user_by_id(current_user['_id'])
     if user['loginStatus'] == 'logedIn':
         db_user.set_user_logInOut(current_user['_id'],"logedOut")
-        return jsonify({"msg":"You are loged out"})
+        return jsonify({"msg":"You are loged out"}),200
     else:
-        return jsonify({"msg":"login before logout"})
+        return jsonify({"msg":"login before logout"}),404
     
     
 @user_bp.route('/user/rank', methods=['GET'])
@@ -108,7 +108,7 @@ def get_summoner_rank():
     rank_info = rank.get_summoner_rank_by_name(summoner_name, region)
     
     if rank_info:
-        return jsonify(rank_info)
+        return jsonify(rank_info),200
     else:
         return jsonify({"error": "Unable to fetch summoner rank"}), 400
 
