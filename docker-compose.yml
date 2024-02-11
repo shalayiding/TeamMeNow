@@ -10,14 +10,14 @@ services:
     volumes:
       - ./backend:/app
 
-  # bot:
-  #   image: bot:latest
-  #   env_file:
-  #     - ./bot/.env
-  #   # volumes:
-  #   #   - ./bot:/app
-  #   environment:
-  #     - BACKEND_API_URL=http://back-end:5000
+  bot:
+    image: bot:latest
+    env_file:
+      - ./bot/.env
+    volumes:
+      - ./bot:/app
+    environment:
+      - BACKEND_API_URL=http://back-end:5001
 
   front-end:
     image: front-end:latest
