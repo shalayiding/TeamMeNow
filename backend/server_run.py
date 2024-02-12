@@ -1,24 +1,17 @@
-from flask import request,Flask,jsonify,session,redirect, url_for
-from services.discord_oauth2 import DCoauth
+from flask import Flask
 from flask_cors import CORS  # Import CORS
-import config as keys
+from config import * 
 from flask_jwt_extended import JWTManager
-
-
-# getting the blueprint for user and match route
-from routes.user_route import user_bp
-from routes.match_route import match_bp
-
+import routes
 
 
 # app settings
 app = Flask(__name__)
-app.register_blueprint(match_bp, url_prefix='/v1')
-app.register_blueprint(user_bp, url_prefix='/v1')
-app.config['JWT_SECRET_KEY'] = keys.flask_secret_key 
-app.secret_key = keys.flask_secret_key
+app.register_blueprint(routes.match_bp, url_prefix='/v1')
+app.register_blueprint(routes.user_bp, url_prefix='/v1')
+app.config['JWT_SECRET_KEY'] = flask_secret_key 
+app.secret_key = flask_secret_key
 jwt = JWTManager(app)
-
 CORS(app,supports_credentials=True,resources={r"/*": {"origins": "http://localhost:3000"}}) 
 
 
@@ -26,12 +19,6 @@ CORS(app,supports_credentials=True,resources={r"/*": {"origins": "http://localho
 @app.route('/')
 def home():
     return 'This is the home page.'
-
-@app.route('/logout')
-def unlink_discord():
-    session.pop('user_id',None)
-    session.pop('user_info',None)
-    return redirect(url_for('home'))
 
 # main 
 if __name__ == '__main__':

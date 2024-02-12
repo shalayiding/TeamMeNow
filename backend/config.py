@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 import os
-
+# load env var 
 load_dotenv()
 discord_client_secret = os.getenv('discord_client_secret')
 discord_client_id = os.getenv('discord_client_id')

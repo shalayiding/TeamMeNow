@@ -1,19 +1,12 @@
-from flask import request,Flask,jsonify,session,redirect, url_for,Blueprint
-from models.match import DB_Matchs
-from models.users import DB_Users
-import config as keys
-from bson import json_util
-from bson.objectid import ObjectId
-from flask_cors import cross_origin
+from config import *
+from flask import request,jsonify,Blueprint
+from bson import json_util,ObjectId
 import json
+import models
 
 
-# setting blueprint and mongodb properties
+
 match_bp = Blueprint('match_bp', __name__)
-db_match = DB_Matchs(keys.mongodb_link,"Matchs","game")
-db_user = DB_Users(keys.mongodb_link,'Matchs','user')
-
-
 
 # return  match information depending on the game
 @match_bp.route('/matchs',methods = ['GET'])
@@ -43,9 +36,9 @@ def find_game():
     
     try:
         limit = min(limit,20)
-        size_found_matchs = db_match.get_match_count(condition)
-        found_matches = db_match.find_match(condition,offset,limit)
-        matches_json = json_util.dumps(found_matches,default = db_match.default_converter)
+        size_found_matchs = models.db_match.get_match_count(condition)
+        found_matches = models.db_match.find_match(condition,offset,limit)
+        matches_json = json_util.dumps(found_matches,default = models.db_match.default_converter)
         matches_dict = json.loads(matches_json)
         totalPage = max(1,size_found_matchs // limit)
         return jsonify({"matches":matches_dict,"totalPage":totalPage}), 200
@@ -58,7 +51,7 @@ def find_game():
 def create_match():
     data = request.json
     try:
-        db_match.insert_match(data.get('host_name'), data.get('host_id'), data.get('game_name'),
+        models.db_match.insert_match(data.get('host_name'), data.get('host_id'), data.get('game_name'),
                               data.get('game_mode'), data.get('player_count'), data.get('description'),
                               data.get('avatar_uri'),data.get('expire_time'),data.get('discord_join_link'))
         
