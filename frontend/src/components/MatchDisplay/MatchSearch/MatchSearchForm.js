@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import SearchTag from "./SearchTag";
+import SearchTag from "./SelectionTag";
 import { Link, Button } from "@nextui-org/react";
-import CreateModal from "./CreateModal";
+import CreateModal from "./CreateMatchModal";
 
 const GameNameSelect = {
   items: [
@@ -35,18 +35,19 @@ const TeamSizeSelect = {
 
 
 
-function BlogSearchNav({ fetchGameData }) {
+function MatchSearchForm({ setmatchSearchQuery , setCurrentPage}) {
 
 
   const [GameName, getGameName] = useState("");
   const [GameMode, getGameMode] = useState("");
   const [TeamSize, getTeamSize] = useState("");
   const handleFindMatchClick = () => {
-    fetchGameData({
+    setmatchSearchQuery({
       gamename: GameName,
       gamemode: GameMode,
       teamsize: TeamSize,
     });
+    setCurrentPage(1);
   };
 
 
@@ -56,7 +57,7 @@ function BlogSearchNav({ fetchGameData }) {
       <SearchTag SearchTagData={GameModeSelect} onChange={getGameMode} />
       <SearchTag SearchTagData={TeamSizeSelect} onChange={getTeamSize} />
 
-      <Button as={Link} color="warning" href="#" onClick={handleFindMatchClick}>
+      <Button as={Link} color="warning" onClick={handleFindMatchClick}>
         Find Match
       </Button>
       <CreateModal></CreateModal>
@@ -64,4 +65,4 @@ function BlogSearchNav({ fetchGameData }) {
   );
 }
 
-export default BlogSearchNav;
+export default MatchSearchForm;

@@ -10,7 +10,7 @@ function SearchTag({SearchTagData,onChange}) {
       placeholder= {SearchTagData.placeholder}
       className="max-w-xs"
       onChange={(e) => onChange(e.target.value)}
-      
+      size="sm"
     >
       {(SearchTagData.items).map((Item) => (
         <SelectItem key={Item.value} value={Item.value}>

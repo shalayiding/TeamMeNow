@@ -105,18 +105,11 @@ function CreateModal(){
             // other fields if necessary
             };
             console.log(payload);
-            // Then perform a POST request to create the match
-            // console.log(apiBaseUrl);
-            // const response = await axios.post(`${apiBaseUrl}/v1/matches`, payload);
-            
+  
             sendDataToServer(payload);
 
-
-            // console.log('Match created:', response.data);
-            // Handle success (close modal, show message, etc.)
         } catch (error) {
             console.error('Error:', error);
-            // Handle error (show error message, etc.)
         }
 
     };

@@ -1,6 +1,6 @@
 import Header from "../components/Header/Header"
 import Footer from '../components/Footer/Footer';
-import Blog from "../components/Blog/Blog";
+import MatchDisplay from "../components/MatchDisplay/MatchDisplay";
 import React from 'react';
 
 
@@ -15,7 +15,7 @@ function Match() {
     <div className="Match">
       
       <Header/>
-      <Blog/>     
+      <MatchDisplay/>     
       <Footer />
 
 

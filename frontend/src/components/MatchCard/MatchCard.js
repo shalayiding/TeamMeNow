@@ -11,7 +11,7 @@ import {
 function MatchCard({gameData}) {
 
   return (
-    <Card className="py-5 w-[350px] rounded-lg shadow">
+    <Card className="py-5 w-[300px] rounded-lg shadow">
       <CardHeader className="flex-col items-start px-4 pt-2 pb-4">
         
         <div className="flex items-center mb-2">
