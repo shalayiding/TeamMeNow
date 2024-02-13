@@ -1,4 +1,6 @@
-![TeamMeUp](./Images/TeamMeUp.png)
+<p align="center">
+  <img src="./Images/TeamMeUp.png" alt="TeamMeUp" />
+</p>
 
 <p align="center" style="font-size: larger;">
 TeamMeUp simplifies the process of finding team mate for your game.
