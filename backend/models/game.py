@@ -56,7 +56,7 @@ class DB_Games:
             return None
     
 
-    def get_match_count(self,query):
+    def get_game_count(self,query):
         return self.collection.count_documents(query)
 
     def find_match_with_id(self,id):

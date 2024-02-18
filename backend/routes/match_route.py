@@ -58,3 +58,16 @@ def create_match():
         return jsonify({"status": "success", "message": f"inserted data {data}"}), 200
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 400
+
+@match_bp.route('/matchs/game',methods=['GET'])
+def game_list():
+    try :
+        condition = {}
+        found_games = models.db_game.find_game(condition)
+        
+        game_json = json_util.dumps(found_games,default=models.db_game.default_converter)
+        game_dict = json.loads(game_json)
+        game_size = models.db_game.get_game_count(condition)
+        return jsonify({"games":game_dict,"gameLength":game_size})
+    except Exception as e:
+        return jsonify({"msg":str(e)}),400
