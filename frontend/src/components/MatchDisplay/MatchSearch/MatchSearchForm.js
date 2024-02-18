@@ -21,9 +21,10 @@ function MatchSearchForm({ setmatchSearchQuery, setCurrentPage }) {
   // const [TeamSize, getTeamSize] = useState("");
   const handleFindMatchClick = () => {
     setmatchSearchQuery({
-      gamename: GameName,
+      gamename: GameName
       // teamsize: TeamSize,
     });
+    console.log(GameName);
     setCurrentPage(1);
   };
 

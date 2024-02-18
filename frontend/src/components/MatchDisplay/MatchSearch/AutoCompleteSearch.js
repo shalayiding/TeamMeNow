@@ -17,7 +17,7 @@ function AutoCompleteSearch({
         listboxWrapper: "max-h-[450px]",
         selectorButton: "text-default-500",
       }}
-      onChange={(e) => onChange(e.target.value)}
+      onSelectionChange={onChange}
       size="lg"
       variant="bordered"
       startContent={
