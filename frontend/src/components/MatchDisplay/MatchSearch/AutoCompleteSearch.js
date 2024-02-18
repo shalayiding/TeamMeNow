@@ -1,11 +1,10 @@
 import React from "react";
-import {Select, SelectItem} from "@nextui-org/react";
+import {Autocomplete, AutocompleteItem} from "@nextui-org/react";
 
-
-function SearchTag({SearchTagData,onChange}) {
+function AutoCompleteSearch({SearchTagData,onChange}) {
 
   return (
-    <Select
+    <Autocomplete
       label={SearchTagData.label}
       placeholder= {SearchTagData.placeholder}
       className="max-w-xs"
@@ -13,13 +12,13 @@ function SearchTag({SearchTagData,onChange}) {
       size="sm"
     >
       {(SearchTagData.items).map((Item) => (
-        <SelectItem key={Item.value} value={Item.value}>
+        <AutocompleteItem key={Item.value} value={Item.value}>
           {Item.label}
-        </SelectItem>
+        </AutocompleteItem>
       ))}
-    </Select>
+    </Autocomplete>
     
   );
 }
 
-export default SearchTag;
+export default AutoCompleteSearch;

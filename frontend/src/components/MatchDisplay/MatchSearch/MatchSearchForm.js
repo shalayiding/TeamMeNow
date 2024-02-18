@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import SearchTag from "./SelectionTag";
+import AutoCompleteSearch from "./AutoCompleteSearch";
 import { Link, Button } from "@nextui-org/react";
 import CreateModal from "./CreateMatchModal";
 
@@ -11,15 +11,6 @@ const GameNameSelect = {
     { label: "Other", value: "Other" },
   ],
   label: "Game Name",
-  
-};
-const GameModeSelect = {
-  items: [
-    { label: "Rank", value: "rank" },
-    { label: "ARAM", value: "ARAM" },
-    { label: "Normal", value: "Normal" },
-  ],
-  label: "Game Mode",
   
 };
 const TeamSizeSelect = {
@@ -39,12 +30,10 @@ function MatchSearchForm({ setmatchSearchQuery , setCurrentPage}) {
 
 
   const [GameName, getGameName] = useState("");
-  const [GameMode, getGameMode] = useState("");
   const [TeamSize, getTeamSize] = useState("");
   const handleFindMatchClick = () => {
     setmatchSearchQuery({
       gamename: GameName,
-      gamemode: GameMode,
       teamsize: TeamSize,
     });
     setCurrentPage(1);
@@ -53,9 +42,8 @@ function MatchSearchForm({ setmatchSearchQuery , setCurrentPage}) {
 
   return (
     <div className="flex items-center justify-center pt-10 pl-10 space-x-4">
-      <SearchTag SearchTagData={GameNameSelect} onChange={getGameName} />
-      <SearchTag SearchTagData={GameModeSelect} onChange={getGameMode} />
-      <SearchTag SearchTagData={TeamSizeSelect} onChange={getTeamSize} />
+      <AutoCompleteSearch SearchTagData={GameNameSelect} onChange={getGameName} />
+      <AutoCompleteSearch SearchTagData={TeamSizeSelect} onChange={getTeamSize} />
 
       <Button as={Link} color="warning" onClick={handleFindMatchClick}>
         Find Match
