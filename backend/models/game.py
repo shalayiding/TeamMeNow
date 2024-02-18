@@ -38,7 +38,7 @@ class DB_Games:
             print(f"An error occurred: {e}")
                 
     # find game detail base on the condition
-    def find_game(self,condition):
+    def find_game(self,condition,limit):
         """find game data from the data base on condition
 
         Args:
@@ -49,7 +49,7 @@ class DB_Games:
         """
         try:
             # Find and return the available matches
-            games = self.collection.find(condition)
+            games = self.collection.find(condition).limit(limit)
             return games
         except Exception as e:
             print(f"An error occurred while fetching available matches: {e}")

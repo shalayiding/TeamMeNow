@@ -63,7 +63,7 @@ def create_match():
 def game_list():
     try :
         condition = {}
-        found_games = models.db_game.find_game(condition)
+        found_games = models.db_game.find_game(condition,135)
         
         game_json = json_util.dumps(found_games,default=models.db_game.default_converter)
         game_dict = json.loads(game_json)
