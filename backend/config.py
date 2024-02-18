@@ -7,6 +7,9 @@ discord_client_id = os.getenv('discord_client_id')
 discord_API_ENDPOINT = os.getenv('discord_API_ENDPOINT')
 discord_redirect_url = os.getenv('discord_redirect_url')
 mongodb_link = os.getenv('mongodb_link')
+mongodb_database_name = os.getenv('mongodb_database_name')
+
+
 discord_bot_token = os.getenv('discord_bot_token')
 flask_secret_key = os.getenv("flask_secret_key")
 riot_api_key = os.getenv("riot_api_key")
