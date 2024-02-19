@@ -67,12 +67,13 @@ function MatchSearchForm({ setmatchSearchQuery, setCurrentPage }) {
         label={""}
         autoCompleteItems={items}
         onChange={getGameName}
+        isInvalid={false}
       />
 
       <Button as={Link} color="warning" onClick={handleFindMatchClick}>
         Find Match
       </Button>
-      <CreateModal></CreateModal>
+      <CreateModal gameNameSelect = {gameNameSelect}></CreateModal>
     </div>
   );
 }

@@ -6,6 +6,7 @@ function AutoCompleteSearch({
   placeHolder,
   label,
   onChange,
+  isInvalid,
 }) {
   return (
     <Autocomplete
@@ -20,6 +21,7 @@ function AutoCompleteSearch({
       onSelectionChange={onChange}
       size="lg"
       variant="bordered"
+      isInvalid = {isInvalid}
       startContent={
         <svg
           aria-hidden="true"
