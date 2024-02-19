@@ -1,7 +1,7 @@
 import React,{useState,useEffect,useCallback } from "react";
-import logo from "./Images/new_logo.png";
-import home from "./Images/home.png";
-import match from "./Images/match.png";
+import logo from "../../assets/Images/new_logo.png";
+import home from "../../assets/Images/home.png";
+import match from "../../assets/Images/match.png";
 import LoginButton from "./LoginButton";
 import UserCenter from "./UserCenter";
 import {

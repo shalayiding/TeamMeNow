@@ -1,7 +1,7 @@
 
 import React from 'react';
-import logo from "../Header/Images/new_logo.png"
-import appScreenShot from "./Images/home_intro.png"
+import logo from "../../assets/Images/new_logo.png"
+import appScreenShot from "../../assets/Images/home_intro.png"
 function HomeIntro() {
 
 

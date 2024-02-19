@@ -1,5 +1,5 @@
 import React from "react";
-import discord_icon from "./Images/discord.png";
+import discord_icon from "../../assets/Images/discord.png";
 
 import {
   NavbarContent,
