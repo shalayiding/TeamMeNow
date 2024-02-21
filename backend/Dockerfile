@@ -1,9 +1,19 @@
-FROM python
+FROM python:3.8-slim
+
 WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt && \
+    pip install gunicorn
+
 COPY . .
 
-RUN pip install -r requirements.txt
+RUN useradd -m backendUser
+USER backendUser
 
-EXPOSE 5000
 
-CMD ["python","server_run.py"]
+EXPOSE 5001
+
+CMD ["gunicorn", "--workers=5","--bind","0.0.0.0:5001","server_run:app"]
+
+

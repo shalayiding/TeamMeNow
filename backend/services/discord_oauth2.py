@@ -3,10 +3,10 @@ import config as apikey
 
 class DCoauth:
     def __init__(self):
-        self.API_ENDPOINT =apikey.discord_API_ENDPOINT 
-        self.CLIENT_ID = apikey.discord_client_id 
-        self.CLIENT_SECRET = apikey.discord_client_secret
-        self.REDIRECT_URI = apikey.discord_redirect_url 
+        self.API_ENDPOINT =apikey.DISCORD_API_ENDPOINT 
+        self.CLIENT_ID = apikey.DISCORD_CLIENT_ID 
+        self.CLIENT_SECRET = apikey.DISCORD_CLIENT_SECRET
+        self.REDIRECT_URI = apikey.DISCORD_REDIRECT_URL 
 
     # exchange the code using oauth2 token to access token 
     def exchange_code(self,code):

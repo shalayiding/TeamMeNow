@@ -9,10 +9,10 @@ import routes
 app = Flask(__name__)
 app.register_blueprint(routes.match_bp, url_prefix='/v1')
 app.register_blueprint(routes.user_bp, url_prefix='/v1')
-app.config['JWT_SECRET_KEY'] = flask_secret_key 
-app.secret_key = flask_secret_key
+app.config['JWT_SECRET_KEY'] = FLASK_SECRET_KEY 
+app.secret_key = FLASK_SECRET_KEY
 jwt = JWTManager(app)
-CORS(app,supports_credentials=True,resources={r"/*": {"origins": "http://localhost:3000"}}) 
+CORS(app,supports_credentials=True,resources={r"/*": {"origins": ALLOWED_ORIGINS}}) 
 
 
 # general testing 
