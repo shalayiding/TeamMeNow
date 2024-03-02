@@ -3,7 +3,7 @@ import MatchCard from "../MatchCard/MatchCard";
 import MatchSearchForm from "./MatchSearch/MatchSearchForm";
 import MatchPagination from "./MatchSearch/MatchPagination";
 
-import axios from "axios";
+import { GetMatchs } from "../../services/api";
 
 function MatchDisplay() {
   // set the current page for the match pagination defualt value 1
@@ -15,7 +15,6 @@ function MatchDisplay() {
   // get the searching query for the match user wants
   const [matchSearchQuery,setmatchSearchQuery] = useState({})
   
-  const apiBaseUrl = process.env.REACT_APP_BACKEND_API_URL;
   const MaxItem = 10;
 
   const fetchGameData = useCallback(() => {
@@ -33,8 +32,7 @@ function MatchDisplay() {
     queryParams.push(`limit=${encodeURIComponent(MaxItem)}`)
 
     const queryString = queryParams.join("&");
-    axios
-      .get(`${apiBaseUrl}/v1/matchs?${queryString}`)
+    GetMatchs(queryString)
       .then((response) => {
         getGameData(response.data);
         setTotalPage(response.data.totalPage);
@@ -42,7 +40,7 @@ function MatchDisplay() {
       })
       .catch((error) => console.error("Error fetching data:", error));
       
-  },[currentPage, matchSearchQuery, apiBaseUrl]);
+  },[currentPage, matchSearchQuery]);
 
   // fetchGamedata when the compoennt is render
   useEffect(() => {

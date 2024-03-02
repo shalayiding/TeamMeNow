@@ -13,8 +13,7 @@ import {
   Slider,
 } from "@nextui-org/react";
 
-import axios from "axios";
-
+import { createMatch, fetchUserData } from "../../../services/api";
 
 function CreateModal({ gameNameSelect }) {
   const [modalGameName, setModalGameName] = useState("");
@@ -31,14 +30,9 @@ function CreateModal({ gameNameSelect }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   
-
-
-  const apiBaseUrl = process.env.REACT_APP_BACKEND_API_URL;
-
   // send match create request to the server
   function sendDataToServer(data) {
-    axios
-      .post(`${apiBaseUrl}/v1/matchs`, data)
+    createMatch()
       .then((response) => {
         console.log("Success:", response.data);
       })
@@ -69,9 +63,7 @@ function CreateModal({ gameNameSelect }) {
     }
 
     try {
-      const userinfo = await axios.get(`${apiBaseUrl}/v1/user/me`, {
-        withCredentials: true,
-      });
+      const userinfo = await fetchUserData();
 
       // If successful, construct your payload
       const payload = {

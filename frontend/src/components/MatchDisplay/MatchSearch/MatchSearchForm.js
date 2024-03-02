@@ -2,19 +2,9 @@ import React, { useEffect, useState } from "react";
 import AutoCompleteSearch from "./AutoCompleteSearch";
 import { Link, Button } from "@nextui-org/react";
 import CreateModal from "./CreateMatchModal";
-import axios from "axios";
 import { AutocompleteItem } from "@nextui-org/react";
 
-// const TeamSizeSelect = {
-//   items: [
-//     { label: "1", value: "1" },
-//     { label: "2", value: "2" },
-//     { label: "3", value: "3" },
-//     { label: "4", value: "4" },
-//     { label: "5", value: "5" },
-//   ],
-//   label: "Player Needed",
-// };
+import { getGames } from "../../../services/api";
 
 function MatchSearchForm({ setmatchSearchQuery, setCurrentPage }) {
   const [GameName, getGameName] = useState("");
@@ -29,18 +19,17 @@ function MatchSearchForm({ setmatchSearchQuery, setCurrentPage }) {
   };
 
   const [gameNameSelect, setGameNameSelect] = useState([]);
-  const apiBaseUrl = process.env.REACT_APP_BACKEND_API_URL;
   useEffect(() => {
     const fetchGameList = async () => {
       try {
-        const response = await axios.get(`${apiBaseUrl}/v1/matchs/game`);
+        const response = await getGames();
         setGameNameSelect(response.data.games);
       } catch (error) {
         console.error("Error fetching game data:", error);
       }
     };
     fetchGameList();
-  }, [apiBaseUrl]);
+  }, []);
 
   var items =
     gameNameSelect &&

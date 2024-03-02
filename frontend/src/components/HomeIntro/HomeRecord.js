@@ -1,9 +1,8 @@
 import React, { useEffect, useState,useCallback  } from "react";
-import axios from "axios";
+import { visitorCollect } from "../../services/api";
 
 function HomeRecord() {
   const [serverResponse, setServerResponse] = useState(null);
-  const apiBaseUrl = process.env.REACT_APP_BACKEND_API_URL;
   const getUserInfo = useCallback(() => {
     const userInfo = {
       device: navigator.userAgent,
@@ -16,13 +15,12 @@ function HomeRecord() {
 
   
   const sendDataToServer = useCallback((data) => {
-    axios.post(`${apiBaseUrl}/v1/user/visitor`, data)
+      visitorCollect(data)
       .then(response => {
-        console.log("Success:", response.data);
         setServerResponse(response.data);
       })
       .catch(error => console.error("Error:", error));
-  }, [apiBaseUrl]); // apiBaseUrl is used as a dependency
+  }, []); // apiBaseUrl is used as a dependency
 
   useEffect(() => {
     const userInfo = getUserInfo();

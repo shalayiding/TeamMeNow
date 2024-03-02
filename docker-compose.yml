@@ -1,8 +1,32 @@
 version: '3.8'
 services:
   back-end:
+    build:
+      context: ./backend/
+      dockerfile: Dockerfile
     image: team-me-now-production-backend:latest
     ports:
       - "5001:5001"
     env_file:
       - ./backend/.env
+    networks:
+      - app-network
+
+
+  front-end:
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile
+    image: team-me-now-production-frontend:latest
+    ports:
+      - "80:80"
+    env_file:
+      - ./frontend/.env
+    networks:
+      - app-network
+
+
+
+networks:
+  app-network:
+    driver: bridge
