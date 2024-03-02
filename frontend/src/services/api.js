@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const apiBaseUrl = "http://localhost:5001";
+const apiBaseUrl = "/api";
 
 
 

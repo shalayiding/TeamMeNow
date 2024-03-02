@@ -12,7 +12,6 @@ services:
     networks:
       - app-network
 
-
   front-end:
     build:
       context: ./frontend/
@@ -20,12 +19,11 @@ services:
     image: team-me-now-production-frontend:latest
     ports:
       - "80:80"
-    env_file:
-      - ./frontend/.env
     networks:
       - app-network
-
-
+    depends_on:
+      - back-end
+    
 
 networks:
   app-network:
