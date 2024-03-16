@@ -14,6 +14,8 @@ import {
 } from "@nextui-org/react";
 
 import { createMatch, fetchUserData } from "../../../services/api";
+import ErrorModal from "../../ErrorModal/ErrorModal";
+
 
 function CreateModal({ gameNameSelect }) {
   const [modalGameName, setModalGameName] = useState("");
@@ -34,9 +36,10 @@ function CreateModal({ gameNameSelect }) {
   function sendDataToServer(data) {
     createMatch()
       .then((response) => {
-        console.log("Success:", response.data);
+        ErrorModal("You got message",response);
       })
-      .catch((error) => console.error("Error:", error));
+      .catch((error) => 
+      ErrorModal("You got error message",error));
   }
 
   useEffect(() => {
