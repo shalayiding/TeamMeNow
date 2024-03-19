@@ -67,3 +67,14 @@ class DB_Games:
         if isinstance(obId, ObjectId):
             return str(obId)  
         return obId.__dict__
+    
+    def get_cover_with_name(self,gamename):
+        try :
+            game = self.collection.find_one({"game_name":gamename})
+            if game: 
+                return game.get('cover_url')
+            else :
+                return None
+        except Exception as e:
+            print(f"An error occurred while getting the cover of the game using gamename: {e}")
+            return None

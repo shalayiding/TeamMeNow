@@ -30,8 +30,8 @@ class DB_Matchs:
         try :
             data = {'host_name':host_name,
                     'host_id':host_id,
-                    'game_name':game_name.lower(),
-                    'game_mode':game_mode.lower(),
+                    'game_name':game_name,
+                    'game_mode':game_mode,
                     "player_count":player_count,
                     'description':description,
                     'avatar_uri':avatar_uri,

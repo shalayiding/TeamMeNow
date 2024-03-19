@@ -27,7 +27,6 @@ def find_game():
         condition['_id'] = ObjectId(match_id)
     if teamsize:
         condition['player_count'] = int(teamsize)
-    print(condition)
     try :
         limit = int(limit)
         offset = int(offset)
@@ -41,6 +40,8 @@ def find_game():
         found_matches = models.db_match.find_match(condition,offset,limit)
         matches_json = json_util.dumps(found_matches,default = models.db_match.default_converter)
         matches_dict = json.loads(matches_json)
+        for m in matches_dict:
+            m['game_cover'] = models.db_game.get_cover_with_name(m['game_name'])
         totalPage = max(1,size_found_matchs // limit)
         return jsonify({"matches":matches_dict,"totalPage":totalPage}), 200
     except Exception as e:
@@ -51,6 +52,7 @@ def find_game():
 @match_bp.route('/matchs',methods= ['POST'])
 def create_match():
     data = request.json
+    print(data)
     try:
         models.db_match.insert_match(data.get('host_name'), data.get('host_id'), data.get('game_name'),
                               data.get('game_mode'), data.get('player_count'), data.get('description'),

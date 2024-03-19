@@ -1,4 +1,4 @@
-import { React, useState, useEffect,useCallback} from "react";
+import { React, useState, useEffect, useCallback } from "react";
 import MatchCard from "../MatchCard/MatchCard";
 import MatchSearchForm from "./MatchSearch/MatchSearchForm";
 import MatchPagination from "./MatchSearch/MatchPagination";
@@ -8,13 +8,13 @@ import { GetMatchs } from "../../services/api";
 function MatchDisplay() {
   // set the current page for the match pagination defualt value 1
   const [currentPage, setCurrentPage] = useState(1);
-  const [TotalPage,setTotalPage] = useState(1);
+  const [TotalPage, setTotalPage] = useState(1);
   //extract all the data of the maching card
   const [gameDataDetail, getGameData] = useState(null);
 
   // get the searching query for the match user wants
-  const [matchSearchQuery,setmatchSearchQuery] = useState({})
-  
+  const [matchSearchQuery, setmatchSearchQuery] = useState({})
+
   const MaxItem = 10;
 
   const fetchGameData = useCallback(() => {
@@ -28,7 +28,7 @@ function MatchDisplay() {
     if (matchSearchQuery && matchSearchQuery.teamsize) {
       queryParams.push(`teamsize=${encodeURIComponent(matchSearchQuery.teamsize)}`);
     }
-    queryParams.push(`offset=${encodeURIComponent((currentPage-1)*MaxItem)}`)
+    queryParams.push(`offset=${encodeURIComponent((currentPage - 1) * MaxItem)}`)
     queryParams.push(`limit=${encodeURIComponent(MaxItem)}`)
 
     const queryString = queryParams.join("&");
@@ -36,11 +36,11 @@ function MatchDisplay() {
       .then((response) => {
         getGameData(response.data);
         setTotalPage(response.data.totalPage);
-        
+
       })
       .catch((error) => console.error("Error fetching data:", error));
-      
-  },[currentPage, matchSearchQuery]);
+
+  }, [currentPage, matchSearchQuery]);
 
   // fetchGamedata when the compoennt is render
   useEffect(() => {
@@ -49,8 +49,9 @@ function MatchDisplay() {
 
   return (
     <div className="relative min-h-screen pb-16 overflow-hidden isolate bg-surface-primary">
+
       <svg
-        className="absolute inset-0 w-full h-full -z-10 stroke-white/10 "
+        className="absolute inset-0 w-full h-full stroke-white/10 "
         aria-hidden="true"
         maskimage="radial-gradient(100% 100% at top right, white, transparent)"
       >
@@ -80,7 +81,7 @@ function MatchDisplay() {
         ></rect>
       </svg>
       <div
-        className="absolute left-[calc(50%-4rem)] top-10 -z-10 transform-gpu blur-3xl sm:left-[calc(50%-18rem)] lg:left-48 lg:top-[calc(50%-30rem)] xl:left-[calc(50%-24rem)]"
+        className="absolute left-[calc(50%-4rem)] top-10 transform-gpu blur-3xl sm:left-[calc(50%-18rem)] lg:left-48 lg:top-[calc(50%-30rem)] xl:left-[calc(50%-24rem)]"
         aria-hidden="true"
       >
         <div
@@ -93,7 +94,7 @@ function MatchDisplay() {
       </div>
 
       <div className="gap-5 pt-3 pb-10">
-        <MatchSearchForm setmatchSearchQuery = { setmatchSearchQuery} setCurrentPage={setCurrentPage}/>
+        <MatchSearchForm setmatchSearchQuery={setmatchSearchQuery} setCurrentPage={setCurrentPage} />
 
         <div className="flex flex-wrap justify-center gap-5 pt-10 pb-20 pl-7 pr-7">
           {gameDataDetail &&
