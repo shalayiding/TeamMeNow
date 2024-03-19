@@ -16,17 +16,18 @@ def find_game():
     teamsize = request.args.get('teamsize')
     match_id = request.args.get('match_id')
     offset = request.args.get('offset',default=0)
-    limit = request.args.get('limit',default=10)    
+    limit = request.args.get('limit',default=10)
+     
     condition = {}
     if gamename :
-        condition['gamename'] = gamename.lower()
+        condition['game_name'] = gamename
     if gamemode :
-        condition['gamemode'] = gamemode.lower()
+        condition['game_mode'] = gamemode
     if match_id :
         condition['_id'] = ObjectId(match_id)
     if teamsize:
         condition['player_count'] = int(teamsize)
-        
+    print(condition)
     try :
         limit = int(limit)
         offset = int(offset)

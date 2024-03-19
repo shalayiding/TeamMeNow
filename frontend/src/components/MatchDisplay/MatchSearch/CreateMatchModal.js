@@ -19,27 +19,33 @@ import ErrorModal from "../../ErrorModal/ErrorModal";
 
 function CreateModal({ gameNameSelect }) {
   const [modalGameName, setModalGameName] = useState("");
-  const [modalGameCover,setModalGameCover] = useState("");
+  const [modalGameCover, setModalGameCover] = useState("");
   const [modalGameMode, setModalGameMode] = useState("");
   const [modalTeamSize, setModalTeamSize] = useState("2");
   const [modalDescription, setModalDescription] = useState("");
-  const [modalDiscordInvLink,setmodalDiscordInvLink] = useState("");
-  
-  const [modalValidGameName,setmodalValidGameName] = useState(false);
-  const [modalValidGameMode,setmodalValidGameMode] = useState(false);
-  const [modalValidDiscordInvLink,setmodalValidDiscordInvLink] = useState(false);
+  const [modalDiscordInvLink, setmodalDiscordInvLink] = useState("");
+
+  const [modalValidGameName, setmodalValidGameName] = useState(false);
+  const [modalValidGameMode, setmodalValidGameMode] = useState(false);
+  const [modalValidDiscordInvLink, setmodalValidDiscordInvLink] = useState(false);
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const closeModal = () => onOpenChange(false);
 
-  
   // send match create request to the server
   function sendDataToServer(data) {
-    createMatch()
+    createMatch(data)
       .then((response) => {
-        ErrorModal("You got message",response);
+        closeModal();
+        console.log("Created");
+
+        // ErrorModal("You got message", response);
       })
-      .catch((error) => 
-      ErrorModal("You got error message",error));
+      .catch((error) => {
+        console.log("error");
+      })
+
+    // ErrorModal("You got error message", error));
   }
 
   useEffect(() => {
@@ -124,12 +130,12 @@ function CreateModal({ gameNameSelect }) {
               </ModalHeader>
 
               <ModalBody className="flex gap-4">
-              {modalGameCover!=="" && <img
-                alt={modalGameName}
-                className="w-20 h-35"
-                src={modalGameCover}
-              />}
-                <AutoCompleteSearch  
+                {modalGameCover !== "" && <img
+                  alt={modalGameName}
+                  className="w-20 h-35"
+                  src={modalGameCover}
+                />}
+                <AutoCompleteSearch
                   placeHolder={"Search by game name "}
                   label={""}
                   autoCompleteItems={gameNameItems}
@@ -147,18 +153,18 @@ function CreateModal({ gameNameSelect }) {
                   className="max-w-xs"
                   isInvalid={modalValidGameMode}
                 />
-                
-                <Slider   
+
+                <Slider
                   size="sm"
                   step={1}
                   color="foreground"
                   label="Required Number of Players:"
-                  showSteps={true} 
-                  maxValue={10} 
-                  minValue={1} 
+                  showSteps={true}
+                  maxValue={10}
+                  minValue={1}
                   defaultValue={modalTeamSize}
                   className="max-w-xs"
-                  onChange={setModalTeamSize} 
+                  onChange={setModalTeamSize}
                 />
 
 
@@ -201,6 +207,7 @@ function CreateModal({ gameNameSelect }) {
           )}
         </ModalContent>
       </Modal>
+
     </div>
   );
 }

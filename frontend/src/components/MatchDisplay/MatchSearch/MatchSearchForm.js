@@ -14,7 +14,6 @@ function MatchSearchForm({ setmatchSearchQuery, setCurrentPage }) {
       gamename: GameName
       // teamsize: TeamSize,
     });
-    console.log(GameName);
     setCurrentPage(1);
   };
 
@@ -62,7 +61,7 @@ function MatchSearchForm({ setmatchSearchQuery, setCurrentPage }) {
       <Button as={Link} color="warning" onClick={handleFindMatchClick}>
         Find Match
       </Button>
-      <CreateModal gameNameSelect = {gameNameSelect}></CreateModal>
+      <CreateModal gameNameSelect={gameNameSelect}></CreateModal>
     </div>
   );
 }

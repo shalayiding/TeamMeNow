@@ -25,7 +25,6 @@ function Header() {
   const fetchData = useCallback(() => {
     fetchUserData()
       .then(response => {
-        console.log(response.data);
         setUserDataDetail(response.data);
       })
       .catch(error => console.error('Error fetching data:', error));

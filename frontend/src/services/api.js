@@ -5,28 +5,29 @@ const apiBaseUrl = "http://localhost:5001";
 
 
 export const fetchUserData = () => {
-  return axios.get(`${apiBaseUrl}/v1/user/me`, { withCredentials: true });
+    return axios.get(`${apiBaseUrl}/v1/user/me`, { withCredentials: true });
 };
 
-export const handleLogout = () =>{
+export const handleLogout = () => {
     return axios.get(`${apiBaseUrl}/v1/user/logout`, { withCredentials: true });
 };
 
-export const visitorCollect =(data) =>{
+export const visitorCollect = (data) => {
     return axios.post(`${apiBaseUrl}/v1/user/visitor`, data);
 };
 
-export const createMatch = (data)=>{
+export const createMatch = (data) => {
+    console.log("here we create match", data);
     return axios.post(`${apiBaseUrl}/v1/matchs`, data);
 
 };
 
-export const getGames = () =>{
+export const getGames = () => {
     return axios.get(`${apiBaseUrl}/v1/matchs/game`);
 };
 
 
-export const GetMatchs = (queryString)=>{
+export const GetMatchs = (queryString) => {
     return axios.get(`${apiBaseUrl}/v1/matchs?${queryString}`);
 };
 
