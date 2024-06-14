@@ -5,7 +5,7 @@ from models.visitor import DB_Visitor
 from models.game import DB_Games
 from config import *
 
-db_match = DB_Matchs(mongodb_link,mongodb_database_name,"match")
-db_user = DB_Users(mongodb_link,mongodb_database_name,"user")
-db_visitor = DB_Visitor(mongodb_link,mongodb_database_name,"visitor")
-db_game = DB_Games(mongodb_link,mongodb_database_name,"game")
+db_match = DB_Matchs(MONGODB_LINK,str(MONGODB_DATABASE_NAME),"match")
+db_user = DB_Users(MONGODB_LINK,str(MONGODB_DATABASE_NAME),"user")
+db_visitor = DB_Visitor(MONGODB_LINK,str(MONGODB_DATABASE_NAME),"visitor")
+db_game = DB_Games(MONGODB_LINK,str(MONGODB_DATABASE_NAME),"game")

@@ -9,14 +9,13 @@ import {
   Avatar,
   DropdownItem,
 } from "@nextui-org/react";
-import axios from "axios";
+
+import { handleLogout } from "../../services/api"; 
 
 function UserCenter({data}) {
   const userData = data.data;
-  // handle user logout 
-  const apiBaseUrl = process.env.REACT_APP_BACKEND_API_URL;
-  const handleLogout = ()=>{
-    axios.get(`${apiBaseUrl}/v1/user/logout`, { withCredentials: true })
+  const logoutUser = ()=>{
+    handleLogout()
       .then(response => {
         window.location.reload();
       })
@@ -55,7 +54,7 @@ function UserCenter({data}) {
         <DropdownItem key="analytics">Analytics</DropdownItem>
         <DropdownItem key="system">System</DropdownItem>
         <DropdownItem key="configurations">Configurations</DropdownItem>
-        <DropdownItem key="logout" color="danger" onClick={handleLogout}>
+        <DropdownItem key="logout" color="danger" onClick={logoutUser}>
           Log Out
         </DropdownItem>
       </DropdownMenu>

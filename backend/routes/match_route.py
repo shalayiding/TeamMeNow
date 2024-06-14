@@ -16,17 +16,17 @@ def find_game():
     teamsize = request.args.get('teamsize')
     match_id = request.args.get('match_id')
     offset = request.args.get('offset',default=0)
-    limit = request.args.get('limit',default=10)    
+    limit = request.args.get('limit',default=10)
+     
     condition = {}
     if gamename :
-        condition['gamename'] = gamename.lower()
+        condition['game_name'] = gamename
     if gamemode :
-        condition['gamemode'] = gamemode.lower()
+        condition['game_mode'] = gamemode
     if match_id :
         condition['_id'] = ObjectId(match_id)
     if teamsize:
         condition['player_count'] = int(teamsize)
-        
     try :
         limit = int(limit)
         offset = int(offset)
@@ -40,6 +40,8 @@ def find_game():
         found_matches = models.db_match.find_match(condition,offset,limit)
         matches_json = json_util.dumps(found_matches,default = models.db_match.default_converter)
         matches_dict = json.loads(matches_json)
+        for m in matches_dict:
+            m['game_cover'] = models.db_game.get_cover_with_name(m['game_name'])
         totalPage = max(1,size_found_matchs // limit)
         return jsonify({"matches":matches_dict,"totalPage":totalPage}), 200
     except Exception as e:
@@ -50,6 +52,7 @@ def find_game():
 @match_bp.route('/matchs',methods= ['POST'])
 def create_match():
     data = request.json
+    print(data)
     try:
         models.db_match.insert_match(data.get('host_name'), data.get('host_id'), data.get('game_name'),
                               data.get('game_mode'), data.get('player_count'), data.get('description'),
@@ -58,3 +61,16 @@ def create_match():
         return jsonify({"status": "success", "message": f"inserted data {data}"}), 200
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 400
+
+@match_bp.route('/matchs/game',methods=['GET'])
+def game_list():
+    try :
+        condition = {}
+        found_games = models.db_game.find_game(condition,135)
+        
+        game_json = json_util.dumps(found_games,default=models.db_game.default_converter)
+        game_dict = json.loads(game_json)
+        game_size = models.db_game.get_game_count(condition)
+        return jsonify({"games":game_dict,"gameLength":game_size})
+    except Exception as e:
+        return jsonify({"msg":str(e)}),400

@@ -1,5 +1,7 @@
-import React, { useState,useEffect } from "react";
-import { Link, Button, Textarea } from "@nextui-org/react";
+import React, { useState, useEffect } from "react";
+import AutoCompleteSearch from "./AutoCompleteSearch";
+
+import { Link, Button, Textarea, AutocompleteItem } from "@nextui-org/react";
 import {
   Modal,
   ModalContent,
@@ -7,203 +9,206 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
-  SelectItem,
-  Select,
+  Input,
+  Slider,
 } from "@nextui-org/react";
-import axios from 'axios';
 
-const GameNameSelect = {
-    items: [
-      { label: "League of Legends", value: "League of Legends" },
-      { label: "Apex Legends", value: "Apex Legends" },
-      { label: "Valorant", value: "Valorant" },
-      { label: "Other", value: "Other" },
-    ],
-    label: "Game Name",
-    
+import { createMatch, fetchUserData } from "../../../services/api";
+import ErrorModal from "../../ErrorModal/ErrorModal";
+
+
+function CreateModal({ gameNameSelect }) {
+  const [modalGameName, setModalGameName] = useState("");
+  const [modalGameCover, setModalGameCover] = useState("");
+  const [modalGameMode, setModalGameMode] = useState("");
+  const [modalTeamSize, setModalTeamSize] = useState("2");
+  const [modalDescription, setModalDescription] = useState("");
+  const [modalDiscordInvLink, setmodalDiscordInvLink] = useState("");
+
+  const [modalValidGameName, setmodalValidGameName] = useState(false);
+  const [modalValidGameMode, setmodalValidGameMode] = useState(false);
+  const [modalValidDiscordInvLink, setmodalValidDiscordInvLink] = useState(false);
+
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const closeModal = () => onOpenChange(false);
+
+  // send match create request to the server
+  function sendDataToServer(data) {
+    createMatch(data)
+      .then((response) => {
+        closeModal();
+        console.log("Created");
+
+        // ErrorModal("You got message", response);
+      })
+      .catch((error) => {
+        console.log("error");
+      })
+
+    // ErrorModal("You got error message", error));
+  }
+
+  useEffect(() => {
+    if (isOpen) {
+      setmodalValidGameName(false);
+      setmodalValidGameMode(false);
+      setmodalValidDiscordInvLink(false);
+      setModalGameCover("");
+    }
+  }, [isOpen]);
+
+
+
+
+
+  //activate when the create botton in modal is clicked
+  const handleCreate = async () => {
+    // make sure when create the submission is not empty
+    if (!modalGameName || !modalGameMode || !modalTeamSize || !modalDiscordInvLink) {
+      setmodalValidGameName(!modalGameName);
+      setmodalValidGameMode(!modalGameMode);
+      setmodalValidDiscordInvLink(!modalDiscordInvLink);
+      return;
+    }
+
+    try {
+      const userinfo = await fetchUserData();
+
+      // If successful, construct your payload
+      const payload = {
+        // Populate your payload based on your requirements
+        host_name: userinfo.data.data.dc_global_name,
+        host_id: userinfo.data.data.dc_id,
+        game_name: modalGameName,
+        game_mode: modalGameMode,
+        player_count: modalTeamSize,
+        description: modalDescription,
+        avatar_uri: userinfo.data.data.dc_avatar_uri,
+        expire_time: 6300,
+        discord_join_link: modalDiscordInvLink,
+        // other fields if necessary
+      };
+      console.log(payload);
+
+      sendDataToServer(payload);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
-  const GameModeSelect = {
-    items: [
-      { label: "Rank", value: "rank" },
-      { label: "ARAM", value: "ARAM" },
-      { label: "Normal", value: "Normal" },
-    ],
-    label: "Game Mode",
-    
+
+  //get image cover image using game name and change the variable modalgamename
+  const handleGameNameSelect = (selectedGameName) => {
+    setModalGameName(selectedGameName);
+    // Find the cover_url corresponding to the selected game name
+    const selectedGame = gameNameSelect.find(game => game.game_name === selectedGameName);
+    if (selectedGame) {
+      setModalGameCover(selectedGame.cover_url);
+    }
   };
-  const TeamSizeSelect = {
-    items: [
-      { label: "1", value: "1" },
-      { label: "2", value: "2" },
-      { label: "3", value: "3" },
-      { label: "4", value: "4" },
-      { label: "5", value: "5" },
-    ],
-    label: "Player Needed",
-  };
-  
-
-function CreateModal(){
-
-    const [modalGameName,setModalGameName] = useState("")
-    const [modalGameMode,setModalGameMode] = useState("")
-    const [modalTeamSize,setModalTeamSize] = useState("")
-    const [modalDescription,setModalDescription] = useState("")
-    
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
-    
-    // reseting values when it open
-    useEffect(() => {
-        if (isOpen) {
-          setModalGameName("");
-          setModalGameMode("");
-          setModalTeamSize("");
-          setModalDescription("");
-        }
-    }, [isOpen]);
-    
-
-    const apiBaseUrl = process.env.REACT_APP_BACKEND_API_URL;
-
-    function sendDataToServer(data) {
-        axios
-          .post(`${apiBaseUrl}/v1/matchs`, data)
-          .then((response) => {
-            console.log("Success:", response.data);
-            
-          })
-          .catch((error) => console.error("Error:", error));
-      }
-
-    const handleCreate = async() =>{
-         // make sure when create the submission is not empty
-        if (!modalGameName || !modalGameMode || !modalTeamSize) {
-            alert('All fields are required.');
-            return;
-        }
-
-        try {
-            
-            const userinfo = await axios.get(`${apiBaseUrl}/v1/user/me`,{
-                withCredentials:true
-            });
-            console.log(userinfo.data.data);
-            
-            // If successful, construct your payload
-            const payload = {
-            // Populate your payload based on your requirements
-            "host_name": userinfo.data.data.dc_global_name,
-            "host_id": userinfo.data.data.dc_id,
-            "game_name": modalGameName,
-            "game_mode":modalGameMode,
-            "max_player":5,
-            "current_player":0,
-            "player_count":modalTeamSize,
-            "description":modalDescription,
-            "avatar_uri":userinfo.data.data.dc_avatar_uri,
-            "expire_time":6300
-            // other fields if necessary
-            };
-            console.log(payload);
-  
-            sendDataToServer(payload);
-
-        } catch (error) {
-            console.error('Error:', error);
-        }
-
-    };
 
 
-    
 
-    return (
-        <div>
-          <Button as={Link} color="warning" href="#" onPress={onOpen}>
-            Create Match
-          </Button>
-          <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-            <ModalContent>
-              {(onClose) => (
-                <>
-                  <ModalHeader className="flex flex-col gap-1">
-                    Create Match
-                  </ModalHeader>
-    
-                  <ModalBody>
-                    <Select
-                      label={GameNameSelect.label}
-                      placeholder={GameNameSelect.placeholder}
-                      className="max-w-xs"
-                      isRequired
-                      variant="underlined"
-                      onChange={(e) => setModalGameName(e.target.value)}
-                    >
-                      {GameNameSelect.items.map((Item) => (
-                        <SelectItem key={Item.value} value={Item.value}>
-                          {Item.label}
-                        </SelectItem>
-                      ))}
-                    </Select>
-    
-                    <Select
-                      label={GameModeSelect.label}
-                      placeholder={GameModeSelect.placeholder}
-                      className="max-w-xs"
-                      isRequired
-                      variant="underlined"
-                      onChange={(e) => setModalGameMode(e.target.value)}
-                    >
-                      {GameModeSelect.items.map((Item) => (
-                        <SelectItem key={Item.value} value={Item.value}>
-                          {Item.label}
-                        </SelectItem>
-                      ))}
-                    </Select>
-    
-                    <Select
-                      label={TeamSizeSelect.label}
-                      placeholder={TeamSizeSelect.placeholder}
-                      className="max-w-xs"
-                      isRequired
-                      variant="underlined"
-                      onChange={(e) => setModalTeamSize(e.target.value)}
-                    >
-                      {TeamSizeSelect.items.map((Item) => (
-                        <SelectItem key={Item.value} value={Item.value}>
-                          {Item.label}
-                        </SelectItem>
-                      ))}
-                    </Select>
-    
-                    <Textarea
-                      label="Description"
-                      variant="bordered"
-                      placeholder="Enter your description"
-                      disableAnimation
-                      disableAutosize
-                      classNames={{
-                        base: "max-w-xs",
-                        input: "resize-y min-h-[40px]",
-                      }}
-                      onChange={(e) => setModalDescription(e.target.value)}
-                    />
-    
-                  </ModalBody>
-                  <ModalFooter>
-                    <Button color="danger" variant="light" onPress={onClose}>
-                      Close
-                    </Button>
-                    <Button color="primary" onClick={handleCreate}>
-                      Create
-                    </Button>
-                  </ModalFooter>
-                </>
-              )}
-            </ModalContent>
-          </Modal>
-        </div>
-      );
+  var gameNameItems =
+    gameNameSelect &&
+    gameNameSelect.map((game) => (
+      <AutocompleteItem key={game.game_name} value={game.game_name}>
+        {game.game_name}
+      </AutocompleteItem>
+    ));
+
+  return (
+    <div>
+      <Button as={Link} color="warning" onPress={onOpen}>
+        Create Match
+      </Button>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="w-full max-w-lg">
+        <ModalContent >
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                Match Details
+              </ModalHeader>
+
+              <ModalBody className="flex gap-4">
+                {modalGameCover !== "" && <img
+                  alt={modalGameName}
+                  className="w-20 h-35"
+                  src={modalGameCover}
+                />}
+                <AutoCompleteSearch
+                  placeHolder={"Search by game name "}
+                  label={""}
+                  autoCompleteItems={gameNameItems}
+                  onChange={handleGameNameSelect}
+                  isInvalid={modalValidGameName}
+                />
+
+                <Input
+                  isRequired
+                  label="Game Mode"
+                  variant="bordered"
+                  placeholder="Enter Game Mode"
+                  defaultValue={modalGameMode}
+                  onValueChange={setModalGameMode}
+                  className="max-w-xs"
+                  isInvalid={modalValidGameMode}
+                />
+
+                <Slider
+                  size="sm"
+                  step={1}
+                  color="foreground"
+                  label="Required Number of Players:"
+                  showSteps={true}
+                  maxValue={10}
+                  minValue={1}
+                  defaultValue={modalTeamSize}
+                  className="max-w-xs"
+                  onChange={setModalTeamSize}
+                />
+
+
+
+                <Input
+                  isRequired
+                  label="Discord Invitation Link"
+                  variant="bordered"
+                  placeholder="Enter Invitation Link"
+                  defaultValue={modalDiscordInvLink}
+                  onValueChange={setmodalDiscordInvLink}
+                  className="max-w-lg"
+                  isInvalid={modalValidDiscordInvLink}
+                />
+
+
+
+                <Textarea
+                  label="Description"
+                  variant="bordered"
+                  placeholder="Enter your description"
+                  disableAnimation
+                  disableAutosize
+                  classNames={{
+                    base: "max-w-xs",
+                    input: "resize-y",
+                  }}
+                  onChange={(e) => setModalDescription(e.target.value)}
+                />
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onClose}>
+                  Close
+                </Button>
+                <Button color="primary" onClick={handleCreate}>
+                  Create
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+
+    </div>
+  );
 }
 export default CreateModal;
-

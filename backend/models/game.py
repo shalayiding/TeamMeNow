@@ -38,7 +38,7 @@ class DB_Games:
             print(f"An error occurred: {e}")
                 
     # find game detail base on the condition
-    def find_game(self,condition):
+    def find_game(self,condition,limit):
         """find game data from the data base on condition
 
         Args:
@@ -49,14 +49,14 @@ class DB_Games:
         """
         try:
             # Find and return the available matches
-            games = self.collection.find(condition)
+            games = self.collection.find(condition).limit(limit)
             return games
         except Exception as e:
             print(f"An error occurred while fetching available matches: {e}")
             return None
     
 
-    def get_match_count(self,query):
+    def get_game_count(self,query):
         return self.collection.count_documents(query)
 
     def find_match_with_id(self,id):
@@ -67,3 +67,14 @@ class DB_Games:
         if isinstance(obId, ObjectId):
             return str(obId)  
         return obId.__dict__
+    
+    def get_cover_with_name(self,gamename):
+        try :
+            game = self.collection.find_one({"game_name":gamename})
+            if game: 
+                return game.get('cover_url')
+            else :
+                return None
+        except Exception as e:
+            print(f"An error occurred while getting the cover of the game using gamename: {e}")
+            return None

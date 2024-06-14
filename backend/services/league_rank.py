@@ -3,8 +3,8 @@ import config as apikey
 
 class Rank:
     def __init__(self):
-        self.RIOT_API_KEY =apikey.riot_api_key
-        self.CLIENT_ID = apikey.discord_client_id 
+        self.RIOT_API_KEY =apikey.RIOT_API_KEY
+        self.CLIENT_ID = apikey.DISCORD_CLIENT_ID 
         self.BASE_URL = "https://na1.api.riotgames.com/lol/" #NA1 can be changed
     
     def get_summoner_rank_by_name(self, name, region):

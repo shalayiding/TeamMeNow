@@ -1,7 +1,7 @@
-import React,{useState,useEffect,useCallback } from "react";
-import logo from "./Images/new_logo.png";
-import home from "./Images/home.png";
-import match from "./Images/match.png";
+import React, { useState, useEffect, useCallback } from "react";
+import logo from "../../assets/Images/teammenow_icon.png";
+import home from "../../assets/Images/home.png";
+import match from "../../assets/Images/match.png";
 import LoginButton from "./LoginButton";
 import UserCenter from "./UserCenter";
 import {
@@ -12,57 +12,58 @@ import {
   Link,
   Image,
 } from "@nextui-org/react";
-import axios from "axios";
+
+
+import { fetchUserData } from "../../services/api"; // Update the path as necessary
 
 
 function Header() {
 
-  const [userDataDetail,setUserDataDetail] = useState(null)
+  const [userDataDetail, setUserDataDetail] = useState(null)
   const isUserDataValid = !!userDataDetail && !!userDataDetail.data;
-  const apiBaseUrl = process.env.REACT_APP_BACKEND_API_URL;
-  const fetchUserData = useCallback(() => {
-    axios.get(`${apiBaseUrl}/v1/user/me`, { withCredentials: true })
+
+  const fetchData = useCallback(() => {
+    fetchUserData()
       .then(response => {
-        console.log(response.data);
         setUserDataDetail(response.data);
       })
       .catch(error => console.error('Error fetching data:', error));
-  }, [apiBaseUrl]); // Assuming apiBaseUrl is stable, it's used as a dependency
+  }, []);
 
   useEffect(() => {
-    fetchUserData();
-  }, [fetchUserData]); // Now fetchUserData is a dependency
+    fetchData();
+  }, [fetchData]);
 
 
-  
+
   return (
     <Navbar>
-        
-      <NavbarBrand  className="flex items-center mr-2 text-lg italic font-semibold hover:scale-95 active:scale-95" justify="start">
-      <Link color="foreground" href="/" className="flex items-center mr-2 text-lg italic font-semibold hover:scale-95 active:scale-95" >
-        <Image  className="object-contain object-center w-12 h-12" src={logo} />
-        <p className="font-bold text-inherit">TeamMeUp</p>
+
+      <NavbarBrand className="flex items-center mr-2 text-lg italic font-semibold hover:scale-95 active:scale-95" justify="start">
+        <Link color="foreground" href="/" className="flex items-center mr-2 text-lg italic font-semibold hover:scale-95 active:scale-95" >
+          <Image className="object-contain object-center w-12 h-12" src={logo} />
+          <p className="font-bold text-inherit">Team Me Now</p>
         </Link>
       </NavbarBrand>
-        
+
       <NavbarContent className="hidden gap-10 sm:flex" justify="center">
         <NavbarItem>
           <NavbarBrand>
             <Link color="foreground" href="/" className="flex items-center mr-2 text-lg italic font-semibold hover:scale-95 active:scale-95" >
-            <Image src={home} className="object-contain object-center w-8 h-8 mr-2 filter invert" />
-            Home
+              <Image src={home} className="object-contain object-center w-8 h-8 mr-2 filter invert" />
+              Home
             </Link>
           </NavbarBrand>
         </NavbarItem>
         <NavbarItem>
           <NavbarBrand>
             <Link color="foreground" href="/match" className="flex items-center mr-2 text-lg italic font-semibold hover:scale-95 active:scale-95" >
-            <Image src={match} className="object-contain object-center w-8 h-8 mr-2 filter invert" />
-            Match
+              <Image src={match} className="object-contain object-center w-8 h-8 mr-2 filter invert" />
+              Match
             </Link>
           </NavbarBrand>
         </NavbarItem>
-        
+
       </NavbarContent>
       {isUserDataValid ? <UserCenter data={userDataDetail}></UserCenter> : (<LoginButton></LoginButton>)}
 

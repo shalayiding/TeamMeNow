@@ -140,7 +140,7 @@ def linkDiscord():
                 
                 expires = timedelta(hours=3)
                 access_token = create_access_token(identity={"_id":found_user},expires_delta=expires)
-                response = make_response(redirect("http://localhost:3000/"))
+                response = make_response(redirect(str(ALLOWED_ORIGINS)))
                 models.db_user.set_user_logInOut(found_user,"logedIn")
                 response.set_cookie("access_token_cookie", access_token, httponly=True)
                 return response   

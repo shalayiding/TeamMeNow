@@ -1,66 +1,67 @@
-import React, { useState } from "react";
-import SearchTag from "./SelectionTag";
+import React, { useEffect, useState } from "react";
+import AutoCompleteSearch from "./AutoCompleteSearch";
 import { Link, Button } from "@nextui-org/react";
 import CreateModal from "./CreateMatchModal";
+import { AutocompleteItem } from "@nextui-org/react";
 
-const GameNameSelect = {
-  items: [
-    { label: "League of Legends", value: "League of Legends" },
-    { label: "Apex Legends", value: "Apex Legends" },
-    { label: "Valorant", value: "Valorant" },
-    { label: "Other", value: "Other" },
-  ],
-  label: "Game Name",
-  
-};
-const GameModeSelect = {
-  items: [
-    { label: "Rank", value: "rank" },
-    { label: "ARAM", value: "ARAM" },
-    { label: "Normal", value: "Normal" },
-  ],
-  label: "Game Mode",
-  
-};
-const TeamSizeSelect = {
-  items: [
-    { label: "1", value: "1" },
-    { label: "2", value: "2" },
-    { label: "3", value: "3" },
-    { label: "4", value: "4" },
-    { label: "5", value: "5" },
-  ],
-  label: "Player Needed",
-};
+import { getGames } from "../../../services/api";
 
-
-
-function MatchSearchForm({ setmatchSearchQuery , setCurrentPage}) {
-
-
+function MatchSearchForm({ setmatchSearchQuery, setCurrentPage }) {
   const [GameName, getGameName] = useState("");
-  const [GameMode, getGameMode] = useState("");
-  const [TeamSize, getTeamSize] = useState("");
+  // const [TeamSize, getTeamSize] = useState("");
   const handleFindMatchClick = () => {
     setmatchSearchQuery({
-      gamename: GameName,
-      gamemode: GameMode,
-      teamsize: TeamSize,
+      gamename: GameName
+      // teamsize: TeamSize,
     });
     setCurrentPage(1);
   };
 
+  const [gameNameSelect, setGameNameSelect] = useState([]);
+  useEffect(() => {
+    const fetchGameList = async () => {
+      try {
+        const response = await getGames();
+        setGameNameSelect(response.data.games);
+      } catch (error) {
+        console.error("Error fetching game data:", error);
+      }
+    };
+    fetchGameList();
+  }, []);
+
+  var items =
+    gameNameSelect &&
+    gameNameSelect.map((game) => (
+      <AutocompleteItem
+        key={game.game_name}
+        value={game.game_name}
+        startContent={
+          <img
+            alt={game.game_name}
+            className="w-20 h-20"
+            src={game.cover_url}
+          />
+        }
+      >
+        {game.game_name}
+      </AutocompleteItem>
+    ));
 
   return (
     <div className="flex items-center justify-center pt-10 pl-10 space-x-4">
-      <SearchTag SearchTagData={GameNameSelect} onChange={getGameName} />
-      <SearchTag SearchTagData={GameModeSelect} onChange={getGameMode} />
-      <SearchTag SearchTagData={TeamSizeSelect} onChange={getTeamSize} />
+      <AutoCompleteSearch
+        placeHolder={"Search by game name "}
+        label={""}
+        autoCompleteItems={items}
+        onChange={getGameName}
+        isInvalid={false}
+      />
 
       <Button as={Link} color="warning" onClick={handleFindMatchClick}>
         Find Match
       </Button>
-      <CreateModal></CreateModal>
+      <CreateModal gameNameSelect={gameNameSelect}></CreateModal>
     </div>
   );
 }

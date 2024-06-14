@@ -1,9 +1,8 @@
-import asyncio
 import discord
 from discord import app_commands
 from discord.ext import commands
 import config as keys
-import bot_view as bot_view
+
 from datetime import datetime,timedelta
 import aiohttp
 

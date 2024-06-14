@@ -1,19 +1,20 @@
-FROM node:alpine
+FROM node:alpine as build-stage
 
-# Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install dependencies
 RUN npm install
 
-# Copy app source
 COPY . .
 
-# Expose the port the app runs on
-EXPOSE 3000
+RUN npm run build
 
-# Define the command to run your app
-CMD [ "npm", "start" ]
+FROM nginx:alpine
+
+COPY --from=build-stage /app/build /usr/share/nginx/html
+COPY nginx.config /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
