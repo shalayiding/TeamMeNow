@@ -1,14 +1,14 @@
 <p align="center">
-  <img src="./Images/TeamMeUp.png" alt="TeamMeUp" />
+  <img src="./Images/TeamMeNow.png" alt="TeamMeNow" height = 300px width=500px/>
 </p>
 
 <p align="center" style="font-size: larger;">
-TeamMeUp simplifies the process of finding team mate for your game.
+TeamMeNow simplifies the process of finding team mate for your game.
 </p>
 
 ## Introduction
 
-TeamMeUp is a web application with an integrated Discord bot designed to facilitate gamers in finding and joining game matches effortlessly. This platform allows users to seamlessly create or join matches through Discord bot commands or a web interface, promoting an accessible and user-friendly gaming experience.
+TeamMeNow is a web application with an integrated Discord bot designed to facilitate gamers in finding and joining game matches effortlessly. This platform allows users to seamlessly create or join matches through Discord bot commands or a web interface, promoting an accessible and user-friendly gaming experience.
 
 ## Features
 
@@ -23,7 +23,7 @@ The system architecture employs AWS EC2 for hosting, Docker for containerization
 
 ## Quickstart Guide ( Users )
 
-***Coming soon.***
+**_Coming soon._**
 
 ## Quickstart Guide ( Developer )
 
@@ -35,9 +35,9 @@ The system architecture employs AWS EC2 for hosting, Docker for containerization
 ### Installation
 
 1. Clone the repository:
-   `git clone https://github.com/shalayiding/TeamMeUp.git`
+   `git clone https://github.com/shalayiding/TeamMeNow.git`
 2. Navigate to the project directory:
-   `cd TeamMeUp`
+   `cd TeamMeNow`
 3. Run the application using Docker:
    `docker-compose up -d`
 
@@ -47,10 +47,10 @@ The project is set up with separate MongoDB configurations for development and p
 
 ## Contributing
 
-We encourage contributions to TeamMeUp. If you have suggestions or issues, please open an issue or submit a pull request.
+We encourage contributions to TeamMeNow. If you have suggestions or issues, please open an issue or submit a pull request.
 
 ## Support
 
 For support, please open an issue in the repository, and we will assist you.
 
-Thank you for considering TeamMeUp for your gaming adventures. Happy gaming!
+Thank you for considering TeamMeNow for your gaming adventures. Happy gaming!
