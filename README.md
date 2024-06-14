@@ -8,7 +8,8 @@ TeamMeNow simplifies the process of finding team mate for your game.
 
 ## Introduction
 
-TeamMeNow is a web application with an integrated Discord bot designed to facilitate gamers in finding and joining game matches effortlessly. This platform allows users to seamlessly create or join matches through Discord bot commands or a web interface, promoting an accessible and user-friendly gaming experience.
+
+[TeamMeNow](https://www.teammenow.com) is a web application with an integrated Discord bot designed to facilitate gamers in finding and joining game matches effortlessly. This platform allows users to seamlessly create or join matches through Discord bot commands or a web interface, promoting an accessible and user-friendly gaming experience.
 
 ## Features
 
